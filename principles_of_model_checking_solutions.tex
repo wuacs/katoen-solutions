@@ -370,7 +370,7 @@
 	\subsection*{Exercise 3.20}
 	\newpage
 	\section{4 Regular Properties}
-	\subsubsection{Exercise 4.1}
+	\subsection*{Exercise 4.1}
 	\begin{enumerate}[label=(\alph*)]
 		\item yes, see \autoref{fig:ex4.1:a}
 		\begin{figure}[H]
@@ -430,7 +430,7 @@
 		\label{fig:ex4.1:d}
 	\end{figure}
 	\end{enumerate}
-	\subsubsection{Exercise 4.2}
+	\subsection*{Exercise 4.2}
 	\begin{enumerate}
 		\item Let $n=3$ for simplicity.
 		\begin{figure}[H]
@@ -475,7 +475,7 @@
 			\label{fig:ex4.2:b}
 		\end{figure}
 	\end{enumerate}
-	\subsubsection{Exercise 4.3}
+	\subsection*{Exercise 4.3}
 	\begin{enumerate}[label=(\alph*)]
 		\item \begin{enumerate}[label=(\roman*)]
 			\item See \autoref{fig:ex4.3:a:i}
@@ -581,14 +581,44 @@
 			\end{figure}
 		\end{enumerate}
 	\end{enumerate}
-	\subsubsection{Exercise 4.4}
+	\subsection*{Exercise 4.4}
 	\begin{enumerate}[label=(\alph*)]
 		\item It is true. Take the NFA $N=(Q, \Sigma, \delta, Q_0, F)$ corresponding to $\mathcal{L}$, then by hypothesis this NFA accepts the minimal bad prefixes of $P_{safe}$ and some other bad prefixes. It is enough to remove any outgoing edge from end states in $N$, obtaining the NFA $N'$, to get an NFA accepting the minimal bad prefixes of $P_{safe}$. If $w$($|w|=n$) is a minimal bad prefix then it is accepted by $N$ by construction, which means there exists a run $\pi$ such that $\exists i. \pi_i \in F$ and $\pi_1 \rightarrow^{w_1} \pi_2 \rightarrow^{w_2} ... \rightarrow^{w_n} \pi_i$.
 		Then it is obvious that there cannot be another $j$ such that $j<i$ and $\pi_j\in F$ because this would mean $w'=w_1...w_j$ is a bad prefix (since $L \subseteq BadPref(P_{safe})$) of a minimal bad prefix $w$.
 		Then we know that $N'$ can imitate this same path and thus accept any minimal bad prefix of $P_{safe}$. For the other direction, namely that $N'$ accepts only the (minimal) bad prefixes: since $N'$ is $N$ after we remove some edges it cannot expand the language accepted, thus $N'$ accepts only Bad Prefixes of $L_{safe}$ and because no end state has outgoing transition it accepts only the minimal ones.
 		\item False. Consider the regular safety property $\emptyset$, then $MinBadPref(P_{safe})=\emptyset$ and $BadPref(P_{safe})=(2^{\{0,1\}})^{\omega}$. Now consider $L=\{\{0\}^n\{1\}^n+1| \forall n \ge 0\}$ which is clearly not regular.
 	\end{enumerate}
-	\subsubsection{Exercise 4.5}
+	\subsection*{Exercise 4.5}
+	First, some considerations on the NFA: it is described by the RE: $$((bc)^*a.(a^*.(b+ab).a^*.(b+ab))^*.c)^*.(bc)^*a.c$$.
+	One possible way to describe the bad prefixes represented by this NFA could be: $c \in A_i \implies A_{i-1}= \{a\}$.
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+			\node[state, initial] (s_0) {$s_1, q_0$};
+			\node[state] (s_1) [right=of s_0] {$s_2, q_0$};
+			\node[state] (s_2) [below=of s_0] {$s_3, q_1$};
+			\node[state] (s_3) [right=of s_2] {$s_4, q_2$};
+			\node[state] (s_4) [right=of s_3] {$s_3, q_2$};
+			\node[state] (s_5) [below right=of s_3] {$s_4, q_1$};
+			\path[->] 
+			(s_0)
+			edge [bend left] node {$\alpha$} (s_1)
+			(s_1)
+			edge [bend right] node {$\gamma$} (s_2)
+			(s_2)
+			edge [loop below] node {$\alpha$} ()
+			edge [bend left] node {$\gamma$} (s_3)
+			(s_3)
+			edge [bend left] node {$\gamma$} (s_4)
+			(s_4)
+			edge [loop below] node {$\alpha$} ()
+			edge [bend right] node {$\gamma$} (s_5)
+			(s_5)
+			edge [bend left] node {$\gamma$} (s_2);
+		\end{tikzpicture}
+		\caption{Exercise 4.5, the reachable fragment of the product $TS \otimes A$}
+		\label{fig:ex4.5}
+	\end{figure}
 	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
