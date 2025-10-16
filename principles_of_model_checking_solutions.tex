@@ -619,6 +619,61 @@
 		\caption{Exercise 4.5, the reachable fragment of the product $TS \otimes A$}
 		\label{fig:ex4.5}
 	\end{figure}
+	\subsection{Exercise 4.6}
+	I read this property as "Always, if $a$ becomes valid and $b \land \lnot c$ holds in one of the states \textit{before} then in every state \textit{after} neither $a$ nor $b$ hold until a $c$ holds". I consider the set $AP=\{a,b, c\}$.
+	\begin{enumerate}[label=(\alph*)]
+		\item See \autoref{fig:ex4.1:a}. 
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+				\node[state, initial] (q_0) {$q_0$};
+				\node[state] (q_1) [right=of q_0] {$q_1$};
+				\node[state] (q_2) [below=of q_0] {$q_2$};
+				\node[state, accepting] (q_3) [right=of q_2] {$q_3$};
+				\path[->] 
+				(q_0)
+				edge [bend left] node {$b \land \lnot c$} (q_1)
+				edge [loop above] node {$\lnot b \lor c$} ()
+				(q_1)
+				edge [loop above] node {$\lnot a$} ()
+				edge [bend right] node {$a$} (q_2)
+				(q_2)
+				edge [loop below] node {$\emptyset$} () 
+				edge [bend left] node {$a \lor b \land \lnot c$} (q_3)
+				edge [bend left] node {$c$} (q_0);
+				\end{tikzpicture}
+			\caption{Exercise 4.6 part (a): The NFA $A$ accepting $\text{MinBadPref}(P_{safe})$}
+			\label{fig:ex4.6:a}
+		\end{figure}
+		\item The TS satisfies the property as a state of the form $x, q_3$ is not reachable, see \autoref{fig:ex4.6:b}. \begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+				\node[state, initial] (s_0) {$s_3, q_0$};
+				\node[state, initial] (s_1)[right=of s_0] {$s_1, q_0$};
+				\node[state] (s_2) [right=of s_1] {$s_4, q_0$};
+				\node[state] (s_4) [below=of s_1] {$s_1, q_2$};
+				\node[state] (s_3) [right=of s_4] {$s_5, q_1$};
+				\node[state] (s_5) [below=of s_3] {$s_2, q_1$};
+				\path[->] 
+				(s_0)
+				edge [bend left] node {$\gamma$} (s_1)
+				(s_1)
+				edge [bend left] node {$\gamma$} (s_2)
+				(s_2)
+				edge [bend left] node {$\alpha$} (s_1)
+				edge [bend left] node {$\beta$} (s_3)
+				(s_3)
+				edge [bend left] node {$\alpha$} (s_5)
+				edge [bend left] node {$\beta$} (s_4)
+				(s_4)
+				edge [bend right] node {$\beta$} (s_2)
+				(s_5)
+				edge [bend left] node {$\gamma$} (s_4);
+			\end{tikzpicture}
+			\caption{Exercise 4.6 part (b): The Product $TS \otimes A$}
+			\label{fig:ex4.6:b}
+		\end{figure}
+	\end{enumerate}
 	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
