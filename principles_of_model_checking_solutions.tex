@@ -913,6 +913,60 @@
 		\caption{Exercise 4.11 NBA for the $\omega$-regular expression $(AB+C)^*((AA+B)C)^\omega+(A^*C)^\omega$}
 		\label{fig:ex4.11}
 	\end{figure}
+	\subsection*{Exercise 4.12}
+	For $\mathcal{A}_1: (A.(A+B+C)^*.A+C.(A+B+C)^*.C)^\omega$, for $\mathcal{A}_2: (B+C)^*.A.(B.C)^\omega + (B+C)^*.A.(B.C)^*.B.A^\omega + (B+C)^*.B.A^\omega$
+	\subsection*{Exercise 4.13}
+	First we apply $\omega$ operator to $A_2$. Intuitively, this means that from each end state we can operator as any initial state but keeping in mind that this holds only if the end state has no outgoing edges. Since $q_2$ has outgoing edges we need to duplicate him into a new node $q_5$ which takes all its outgoing edges, see \autoref{fig:ex4.13:power}.
+	Then to make the concatenation NBA, we need to make the end state of $A_1$ act as any initial state of $A_2$: in this case we just need to give the outgoing transitions of $q_0$ to $p_0$.
+	\begin{figure}[H] \centering
+		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+			\node[state, initial below] (q_0) {$q_0$};
+			\node[state] (q_1)[right=of q_0] {$q_1$};
+			\node[state, accepting] (q_2)[above=of q_1] {$q_2$};
+			\node[state] (q_3)[below right=of q_1] {$q_3$};
+			\node[state] (q_4) [right=of q_3] {$q_4$};
+			\node[state] (q_5) [right=of q_2] {$q_5$};
+			\path[->] 
+			(q_0)
+			edge [bend right] node {C} (q_1)
+			(q_1)
+			edge [bend right] node {B} (q_2)
+			edge [bend right] node {C} (q_0)
+			edge [bend right] node {A} (q_3)
+			edge [bend right] node[below] {B} (q_5)
+			(q_2)
+			edge [bend right=60] node {C} (q_1) 
+			(q_3)
+			edge node {B} (q_4)
+			(q_4)
+			edge node[above] {B} (q_1)
+			(q_5)
+			edge node[below] {A} (q_1);
+		\end{tikzpicture}
+		\caption{Exercise 4.13 NBA for $A^\omega_2$}
+		\label{fig:ex4.13:power}
+	\end{figure}
+	\subsection*{Exercise 4.14}
+	This property means "infinitely often $a \land b$ but at least once $a \land \lnot b$. Let $W=\{a\}+\{b\}+\{ab\}+\emptyset$.
+	So $W^*.\{a\}.(W^*.\{a,b\})^\omega$.
+	\subsection*{Exercise 4.15}
+	\begin{figure}[H] \centering
+		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+			\node[state, initial, accepting] (q_0) {$q_0$};
+			\node[state] (q_1)[right=of q_0] {$q_1$};
+			\node[state] (q_2)[below=of q_0] {$q_2$};
+			\path[->] 
+			(q_0)
+			edge [bend right] node {$b \land c$} (q_1)
+			edge node {$a$} (q_2)
+			(q_1)
+			edge [bend right] node {true} (q_0)
+			(q_2)
+			edge [bend left] node {true} (q_0);
+		\end{tikzpicture}
+		\caption{Exercise 4.15 NBA's}
+		\label{fig:ex4.15}
+	\end{figure}
 	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
