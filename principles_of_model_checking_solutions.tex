@@ -703,9 +703,32 @@
 		$$
 		F(G_1.G_2)=E.E'+E_1.F^\omega_1+\dots E_n.F_n^\omega+E.E'_1.(F_1')^\omega+\dots E.E'_t.(F_t')^\omega
 		$$
-		\item $F(G^*)$: by inductive hypothesis $F(G)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$ thus $$F(G^*)=E^*+E^*E_1.F^\omega_1+\dots E^*.E_n.F_n^\omega$$
+		\item $F(G^*)$: by inductive hypothesis $F(G)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$ thus $$F(G^*)=E^*+E^*.E_1.F^\omega_1+\dots E^*.E_n.F_n^\omega$$
 		\item $F(G^\omega)$: by inductive hypothesis $F(G)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$. Following the same reasoning as for the Kleene closure, $F(G^\omega)=(E \setminus \epsilon)^\omega$.
 	\end{enumerate}
+	\subsection*{Exercise 4.9}
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+			\node[state, initial] (s_0) {$s_0$};
+			\node[state] (s_1)[right=of s_0] {$s_1$};
+			\node[state] (s_2) [right=of s_1] {$s_2$};
+			\node[state, accepting] (s_3) [below=of s_1] {$s_3$};
+			\path[->] 
+			(s_0)
+			edge [bend left] node {$A$} (s_1)
+			edge [loop above] node {$B$} ()
+			(s_1)
+			edge [bend left] node {$B$} (s_2)
+			edge [bend left] node {$B$} (s_3)
+			(s_2)
+			edge [bend left] node {$B$} (s_1)
+			(s_3)
+			edge [bend left] node {$A$} (s_0);
+		\end{tikzpicture}
+		\caption{Exercise 4.9. NBA for the property "infinitely many A, and between two A there is an odd number of B"}
+		\label{fig:ex4.9}
+	\end{figure}
 	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
