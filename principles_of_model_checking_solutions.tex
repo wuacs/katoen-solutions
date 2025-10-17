@@ -619,7 +619,7 @@
 		\caption{Exercise 4.5, the reachable fragment of the product $TS \otimes A$}
 		\label{fig:ex4.5}
 	\end{figure}
-	\subsection{Exercise 4.6}
+	\subsection*{Exercise 4.6}
 	I read this property as "Always, if $a$ becomes valid and $b \land \lnot c$ holds in one of the states \textit{before} then in every state \textit{after} neither $a$ nor $b$ hold until a $c$ holds". I consider the set $AP=\{a,b, c\}$.
 	\begin{enumerate}[label=(\alph*)]
 		\item See \autoref{fig:ex4.1:a}. 
@@ -673,6 +673,38 @@
 			\caption{Exercise 4.6 part (b): The Product $TS \otimes A$}
 			\label{fig:ex4.6:b}
 		\end{figure}
+	\end{enumerate}
+	\subsection*{Exercise 4.7}
+	\begin{enumerate}[label=(\alph*)]
+		\item True. $$\underbrace{L(E_1.F^\omega + E_2.F^\omega)}_{L1} = \underbrace{L(E_1).L(F)^\omega}_{L2} \cup \underbrace{L(E_2).L(F)^\omega}_{L3} $$
+		so any word $w \in L1$ is either a word in $L2$ or $L3$ (non exclusive or). 
+		$$
+		\underbrace{L((E_1+E_2).F^\omega)}_{L4} =
+		\underbrace{L(E_1+E_2).L(F)^\omega}_{L5}
+		$$
+		Suppose, without loss of generality, $w \in L2$, then it is made of a prefix $p$ in $L(E_1)$ and an $\omega$-suffix $s$ in $L(F)^\omega$. Since $p \in L(E_1) \implies p \in L(E_1+E_2)$ we conclude. For the other direction: if $w \in L4$ then it is made of a prefix $p$ in $L(E_1 + E_2)$ and a suffix in $L(F^\omega)$, since $p \in L(E_1)$ or $p \in L(E_2)$ we conclude. 
+		\item False. Take $\Sigma=\{a,b,c\}$ as an alphabet, $E=a, F_1=b, F_2=c$. Then $a.(a.b)^\omega \in L(E).(F_1+F_2)^\omega$ by definition of the $\omega$ operator. But $L(E.F^\omega_1)+L(E.F^\omega_2)=\{a.(b)^\omega, a.(c)^\omega\}$
+		\item True. We can just show $$\underbrace{L(F.F^*)^\omega}_{L1}=\underbrace{L(F)^\omega}_{L2}$$ Take any word $w \in L1$. $w$, is by definition, an infinite concatenation of words $w_i \in F.F^*$. We prove that there exists a word $w'\in L2$ such that $\forall i \in \mathbb{N}. w_1...w_i$ is a prefix of $w'$. This equals to say that $w'=w$. By induction:
+		\begin{itemize}
+			\item i=1: by definition $w_1$ is a concatenation of one or more (finite) words from $F$, i.e. $w_1=w_{1,1}.w_{1,2}\dots w_{1,n}$. Let $w'_1=w_{1,1}, w'_2=w_{1,2}\dots w'_n=w_{1,n}$.
+			\item i=k+1: suppose, by inductive hypothesis, that the prefix $w_1...w_k$ is long $q$. suppose $w_{k+1}=w_{k+1,1}.w_{k+1,2}\dots w_{k+1,t}$ then let $w'_{q+1}=w_{k+1,1}, w'_{q+2}=w_{k+1,2}\dots w'_{q+t}=w_{k+1,t}$.
+		\end{itemize}
+		For the other direction, namely that $w \in L2 \implies w \in L1$ we note that $L(F)\subseteq L(F.F^*) \implies L(F)^\omega \subseteq L(F.F^*)^\omega$.
+		\item False. Take $\Sigma=\{a,b\}$ as an alphabet, $E=a, F=b$. Then $a.(a.b)^\omega \in L(E^*.F)^\omega$ but there is no word with infinite $a$s in $E^*.F^\omega$ as the $\omega$ operator is applied only to the language $\{b\}$.
+	\end{enumerate}
+	\subsection*{Exercise 4.8}
+	We need to proceed by cases on the form of $G$, let $F$ be an operator which takes in input a generalized $\omega$-regular expression and returns one equivalent of the form $E+E_1.F_1^\omega+\dots E_n.F^\omega_n$:
+	\begin{enumerate}
+		\item $F(\emptyset)=\emptyset$
+		\item $F(\epsilon)=\epsilon$
+		\item $F(A)=\{A\}$
+		\item $F(G_1+G_2)=F(G_1)+F(G_2)$
+		\item $F(G_1.G_2)$: we know by inductive hypothesis that $F(G_1)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$ and $F(G_2)=E'+E'_1.(F_1')^\omega+\dots E'_t.(F_t')^\omega$ then we need to concatenate finite words of $G_1$ with finite and infinite words of $G_2$ and append the infinite words of $G_1$:
+		$$
+		F(G_1.G_2)=E.E'+E_1.F^\omega_1+\dots E_n.F_n^\omega+E.E'_1.(F_1')^\omega+\dots E.E'_t.(F_t')^\omega
+		$$
+		\item $F(G^*)$: by inductive hypothesis $F(G)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$ thus $$F(G^*)=E^*+E^*E_1.F^\omega_1+\dots E^*.E_n.F_n^\omega$$
+		\item $F(G^\omega)$: by inductive hypothesis $F(G)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$. Following the same reasoning as for the Kleene closure, $F(G^\omega)=(E \setminus \epsilon)^\omega$.
 	\end{enumerate}
 	\newpage
 	\subsection{Appendix}
