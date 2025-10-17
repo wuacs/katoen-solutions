@@ -882,9 +882,37 @@
 	 		\caption{Exercise 4.10 NBA for point (d)}
 	 		\label{fig:ex4.10:d}
 	 	\end{figure}
-
 	\end{enumerate}
-	
+	\subsection*{Exercise 4.11}
+	The Automata has two initial states and two final states and it is depicted in \autoref{fig:ex4.11}.
+	\begin{figure}[H] \centering
+		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+			\node[state, initial below] (s_0) {$s_0$};
+			\node[state] (s_1)[right=of s_0] {$s_1$};
+			\node[state, accepting] (s_2)[right=of s_1] {$s_2$};
+			\node[state, initial below] (s_3)[below=of s_0] {$s_3$};
+			\node[state, accepting] (s_4) [right=of s_3] {$s_4$};
+			\path[->] 
+			(s_0)
+			edge [loop above] node {$AB$} ()
+			edge [loop left] node {$C$} () 
+			edge [bend left] node {$AA$} (s_1)
+			edge [bend right] node {$B$} (s_1)
+ 			(s_1)
+			edge [bend right] node {$C$} (s_2)
+			(s_2)
+			edge [bend left=60] node {$AA$} (s_1)
+			edge [bend right] node {$B$} (s_1)
+			(s_3)
+			edge [loop above] node {$A$} ()
+			edge [bend left] node {$C$} (s_4)
+			(s_4)
+			edge [loop above] node {$C$} ()
+			edge [bend left] node {$A$} (s_3);
+		\end{tikzpicture}
+		\caption{Exercise 4.11 NBA for the $\omega$-regular expression $(AB+C)^*((AA+B)C)^\omega+(A^*C)^\omega$}
+		\label{fig:ex4.11}
+	\end{figure}
 	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
