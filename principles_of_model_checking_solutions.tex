@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{tikz}
+
 \usetikzlibrary{automata,positioning}
 \title{Principles Of Model Checking Exercises Solutions}
 
@@ -967,6 +968,153 @@
 		\caption{Exercise 4.15 NBA's}
 		\label{fig:ex4.15}
 	\end{figure}
+	\subsection*{Exercise 4.16}
+	$L_\omega(A_1)=\emptyset, L_\omega(A_2)=A^\omega$, however the powerset construction yields in both cases an automata with language accepted $A^\omega$.
+	\subsection*{Exercise 4.17}
+	\begin{enumerate}[label=(\alph*)]
+		\item $(2^{AP}.a_1.(2^{AP \setminus \{a_1\}})^*.a_2.(2^{AP \setminus \{a_2\}})^*.a_3\dots a_n)^\omega$ when i write $2^{AP}$ i mean the  regular language of this finite set, i.e. the $+$ of each of its members.
+		\item Suppose there was one such automata $A'$. One word accepted by the language is $w = (a_1.a_2.a_3\dots a_n)^\omega$ and so it must be accepted also by the automata $A'$. 
+		It can be shown that there exists a path $\pi$ with \textit{Traces}$(\pi)=w$ such that a final state $A_f$ appears in the first $n$ positions of the states traversed. The proof relies on the fact that we \textit{need} to encounter an accepting state while consuming an $a_i. 1 \le i \le n$. Say this first happens on the $j$th state we traverse, then it means we arrived in the $j-i+1$th state with $a_1$. So we can take the path $\pi_{j-i+1}\pi_{j-i}\dots \pi_j \cdot \textbf{as before onward}$ as from $\pi_{j-i+1}$ we exit with $a_1$, from $\pi_{j-i}$ with $a_2$ and so on. Remember that since $w$ is accepted also $\Sigma^* \cdot w$ is accepted so we do not care about any finite prefix, we therefore always talk about acceptance of $w$ for clarity.
+		Let us reference the new path as $s_1, s_2, ...s_n...$ and say the $k, k \le n$-th state is the final one. By pigeon-hole principle there must be at least one state repeating in the prefix $s_1,\dots s_n$, say on indexes $j$ and $j+i$.
+		It is clear that once we exit the state with $a_j$ label and the other time with one labeled $a_{j+i} \mod n$(here the modulo moves us back to 1 not 0). So we divide the problem by 3 cases:
+		\begin{itemize}
+			\item $i \le k \le i+j$: but wait...we can now create the path $$(s_i \overset{a_i}{\rightarrow}\dots s_k \dots s_{i+j} \overset{a_{i+j}}{\rightarrow}\dots)=(s_i,\dots, s_{i+j-1})^\omega$$ which is not in our language as $a_{i+j}$ will not be repeated infinitely many times.
+			\item $i+j < k$: but then I can do the path $s_1 \dots s_{i} \overset{a_{i+j}}{\rightarrow} \dots s_k \dots$ but the string $a_1\dots a_{i-1}.a_{i+j}\dots a_n.(a_1\dots a_n)^\omega$ is not in our language as it is not accepted by the automata.
+			\item $i > k$: similar to the previous case.
+		\end{itemize}
+	\end{enumerate}
+	\subsection*{Exercise 4.18}
+	Pick any NFA such that its end states do not have outgoing edges, then the language accepted by the NBA is empty.
+	\subsection*{Exercise 4.19}
+	TODO
+	\subsection*{Exercise 4.20}
+	The NBA has to contain a strongly connected component $S_1$ where a final state of the NBA is reachable and for each state in this SCC the path gives a trace which is a string in $(AB+BA)^\omega$. It is not possible for $S_1$ to allow for transitions of the like $s \rightarrow^A s' \rightarrow^A$ as it would enable us to accept strings of the like "there are infinitely many BBs or AAs".
+	Now from some state $q$ we can consume $A$ and then we should be able to access $S_1$ (to express $AB$) but also to consume another $A$ which cannot go in $S_1$ (because in $S_1$ we cannot express the language $(A+B)^\omega$). 
+	Thus, $q$ has to have two transitions labeled $A$, hence it is not a DBA.
+	\subsection*{Exercise 4.21}
+	TODO 
+	\subsection*{Exercise 4.22}
+	TODO
+	\subsection*{Exercise 4.23}
+Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 = (Q', \Sigma, \delta', Q'_0, F')$ I claim that the DBA $A_{1 \cup 2} = (Q \times Q', \Sigma, \delta^*, Q_0 \times Q'_0, F \times Q' \cup Q \cup F')$ recognizes $L_{\omega}(A_{1 \cup 2}) = L_{\omega}(A_1) \cup L_{\omega}(A_2)$ where $\delta^*$ is defined as:
+	$$
+	\delta^*(\langle q, s \rangle, a) = \langle \delta(q, a), \delta'(s, a)\rangle
+	$$
+	Let $w \in L_{\omega}(A_1) \cup L_{\omega}(A_2)$, then assume $w \in L_{\omega}(A_1)$, the proof does not care whether $w \in L_{\omega}(A_2)$ and it is totally symmetric if we assumed $w \in L_{\omega}(A_2)$ instead.
+	We have $w \in L_{\omega}(A_1) \implies \exists \pi. \pi \in Paths(A_1). Trace(\pi)=w$.
+	Take the path $\pi'$ in $A_{1 \cup 2}$ such that $(a, b) = \pi'_i \overset{x}{\rightarrow} \pi'_{i+1} = (c, d)$ if and only if $a = \pi_i \land b = \delta'(\verb|take_right|(\pi'_{i-1}, x))$. Now it is evident that $\verb|take_left|(\pi'_i)=\pi_i$ and since $\pi_i$ is an accepting path there must exists infinitely many indexes $j. \pi_j \in F$, which implies that those same indexes in $\pi'$ are final as $F \times Q'$ is  subset of the final states of $A_{1 \cup 2}$. The observation on the size of the state space is immediate.
+	\subsection*{Exercise 4.24}
+	The NBA is shown in \autoref{fig:ex4.24}
+		\begin{figure}[H] \centering
+		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+			\node[state, initial] (q_0) {$q_0$};
+			\node[state, accepting] (q_1)[below=of q_0] {$q_1$};
+			\node[state] (q_3)[right=of q_1] {$q_3$};
+			\node[state] (q_4)[right=of q_3] {$q_4$};
+			\node[state, accepting] (q_5)[below left=of q_0] {$q_5$};
+			\path[->] 
+			(q_0)
+			edge [bend right] node {A} (q_1)
+			(q_1)
+			edge [bend right] node[above] {B} (q_4)
+			edge [bend left] node[above] {B} (q_5)
+			edge [bend right] node {B} (q_3)
+			(q_3)
+			edge [bend right] node {A} (q_4)
+			(q_4)
+			edge [bend right] node {B} (q_5)
+			edge [loop below] node {B} ()
+			(q_5)
+			edge [bend left] node[below] {B} (q_0);
+		\end{tikzpicture}
+		\caption{Exercise 4.24 NBA's}
+		\label{fig:ex4.24}
+	\end{figure}
+	\subsection*{Exercise 4.25}
+	TODO
+	\subsection*{Exercise 4.26}
+	\begin{enumerate}[label=(\alph*)]
+		\item $L=(BB+C(AA)^+C)^\omega + (BB+C(AA)^+C)^*C.(AA)^\omega$
+		\item The GNBA $\mathcal{A}=(Q,\Sigma, \delta, Q_0, \mathcal{F})$ accepts the same language as the Muller Automaton $(Q, \Sigma, \delta, Q_0, \mathcal{F}')$ where $\mathcal{F}'=\{ A | \forall f \in \mathcal{F} \exists a. \in F \land a \in A \}$.
+	\end{enumerate}
+	\subsection*{Exercise 4.27}
+	\begin{enumerate}[label=(\alph*)]
+		\item You can view the NBA for $P_{live}$ in \autoref{fig:ex4.27} and the one for its complement in \autoref{fig:ex4.27:complement}.
+		\begin{figure}[H] 
+			\centering
+			\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+				\node[state, initial, accepting] (q_0) {$q_0$};
+				\node[state] (q_1)[below=of q_0] {$q_1$};
+				\path[->]
+				(q_0)
+				edge [loop above] node {$\lnot wait_1$} ()
+				edge [bend right] node[above] {$wait_1$} (q_1)
+				(q_1)
+				edge [loop right] node {$\lnot crit_1$} ()
+				edge [bend right] node[above] {$crit_1$} (q_0);
+			\end{tikzpicture}
+			\caption{Exercise 4.27 NBA for $P_{live}$}
+			\label{fig:ex4.27}
+		\end{figure}
+		\begin{figure}[H] 
+			\centering
+			\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+				\node[state, initial] (q_0) {$q_0$};
+				\node[state, accepting] (q_1)[below=of q_0] {$q_1$};
+				\path[->]
+				(q_0)
+				edge [loop above] node {$\lnot wait_1$} ()
+				edge [bend right] node[above] {$wait_1$} (q_1)
+				(q_1)
+				edge [loop right] node {$\lnot crit_1$} ();
+			\end{tikzpicture}
+			\caption{Exercise 4.27 NBA for the complement of $P_{live}$}
+			\label{fig:ex4.27:complement}
+		\end{figure}
+		\item \begin{enumerate}[label=(\roman*)]
+			\item Consider $TS_{Sem}$ in \autoref{fig:semaphore-transition-system}. The reachable fragment of $TS_{Sem} \otimes \hat{\mathcal{A}}$ is depicted in \autoref{fig:ex4.27:b:i}. The nested DFS computes in which reachable states $\lnot \bigwedge_{\forall f \in F} \lnot f=q_1$. For example $\langle s_7, q_1 \rangle$. Then from this state runs a DFS and it first adds on the stack $\langle s_6, q_1\rangle$ and checks if there is an edge $\langle s_6, q_1 \rangle \rightarrow \langle s_7, q_1 \rangle$ since it is negative, it checks $\langle s_1, q_1 \rangle$ which has an outgoing edge to $\langle s_7, q_1 \rangle$ and thus it returns $\langle s_7, q_1 \rangle, \langle s_6, q_1 \rangle, \langle s_1, q_1 \rangle, \langle s_7, q_1 \rangle$.
+			\begin{figure}[H] 
+				\centering
+				\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+					\node[state, initial] (p_0) {$\langle s_0, q_0 \rangle$};
+					\node[state] (p_1)[right=of p_0] {$\langle s_1, q_1 \rangle$};
+					\node[state] (p_2)[below=of p_1] {$\langle s_7, q_1\rangle$};
+					\node[state] (p_3)[left=of p_2] {$\langle s_6, q_1 \rangle $};
+					\path[->]
+					(p_0)
+					edge node {} (p_1)
+					(p_1)
+					edge node {} (p_2)
+					(p_2)
+					edge node {} (p_3)
+					(p_3)
+					edge node {} (p_1);
+				\end{tikzpicture}
+				\caption{Exercise 4.27 }
+				\label{fig:ex4.27:b:i}
+			\end{figure}
+			\begin{figure}[H] 
+				\centering
+				\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
+					\node[state, initial] (p_0) {$\langle s_0, q_0 \rangle$};
+					\node[state] (p_1)[right=of p_0] {$\langle s_1, q_1 \rangle$};
+					\node[state] (p_2)[below=of p_1] {$\langle s_7, q_1\rangle$};
+					\node[state] (p_3)[left=of p_2] {$\langle s_6, q_1 \rangle $};
+					\path[->]
+					(p_0)
+					edge node {} (p_1)
+					(p_1)
+					edge node {} (p_2)
+					(p_2)
+					edge node {} (p_3)
+					(p_3)
+					edge node {} (p_1);
+				\end{tikzpicture}
+				\caption{Exercise 4.27 }
+				\label{fig:ex4.27:c:i}
+			\end{figure}
+		\end{enumerate}
+	\end{enumerate}
 	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
