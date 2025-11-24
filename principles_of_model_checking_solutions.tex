@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usepackage{logix}
 
 \usetikzlibrary{automata,positioning}
 \title{Principles Of Model Checking Exercises Solutions}
@@ -1115,7 +1116,28 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\end{figure}
 		\end{enumerate}
 	\end{enumerate}
+	\section{5 Linear Time Properties}
+	\subsection*{Exercise 5.1}
+	Let $S=\{s_1, s_2, s_3, s_4\}$.
+	\begin{enumerate}[label=(\arabic*)]
+		\item \FacNext a is satisfied by $S\setminus s_4$
+		\item \FacNext \FacNext \FacNext resolves in computing all paths of length 3 starting from a certain state and checking whether they end up in $S \setminus s_4$, clearly this happens for any path starting from any state, so the whole state space satisfies the formula.
+		\item This formula is satisfied by no state as eventually we enter in a state in $\{s_1, s_2\}$
+		\item It is satisfied by $S$
+		\item It is satisfied by $S$
+		\item Any state satisfying $\FacPos b$ also satisfies $\FacPos (a U b)$ and all the states satisfy $\FacPos b$
+	\end{enumerate}
+	\subsection*{Exercise 5.2}
+	\begin{itemize}
+		\item $\lnot TS \models \phi_1$: there is no state which satisfies $\FacNec c$.
+		\item $TS \models \phi_2$: the only way not to satisfy this formula would be to loop through states which do not have $c$ in their label set. The only two states which do not have $c$ are $s_1$ (which is not reachable apart from when the path starts from it) and $s_4$ which, however, has no outgoing edges to $\{s_1, s_4\}$
+		\item $\lnot TS \models \phi_3$: $\pi \eqdef s_1 \rightarrow s_4 \rightarrow s_5 \rightarrow s_4 \in Paths(TS)$ but $\lnot \pi \models \phi_3$.
+		\item $\lnot TS \models \phi_4$ because $c \notin L(s_2)$
+		\item $TS \models \phi_5$ because all paths in the SCC $S' = S  \setminus s_1$ satisfy $\FacNec b \lor c$ and for a path starting from $s_1$ the only two outgoing edges are into $S'$.
+		\item $TS \models \phi_6$ by the same reasoning as for $\phi_5$.
+	\end{itemize}
 	\newpage
+	
 	\subsection{Appendix}
 		\begin{figure}[H]
 		\centering    
