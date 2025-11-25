@@ -5,7 +5,7 @@ Status of Chapters Done:
 
 - [x] 3 Linear Time Properties 20/20
 - [ ] 4 Regular Properties 25/28
-- [ ] 5 Linear Temporal Logic
+- [ ] 5 Linear Temporal Logic 2/27
 - [ ] 6 Computation Tree Logic
 - [ ] 7 Equivalence And Abstraction
 - [ ] 8 Partial Order Reduction

@@ -18,6 +18,11 @@
 
 \newcommand{\cupdot}{\mathbin{\mathaccent\cdot\cup}}
 \author{Dario Bekic}
+
+\let\next\FacNext
+\let\eventually\FacPos
+\let\always\FacNec
+
 \begin{document}
 	
 	\maketitle
@@ -1136,8 +1141,72 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\item $TS \models \phi_5$ because all paths in the SCC $S' = S  \setminus s_1$ satisfy $\FacNec b \lor c$ and for a path starting from $s_1$ the only two outgoing edges are into $S'$.
 		\item $TS \models \phi_6$ by the same reasoning as for $\phi_5$.
 	\end{itemize}
-	\newpage
+	\subsection*{Exercise 5.3}
+	\begin{enumerate}[label=(\alph*)]
+	\item $\always (y\implies \next \lnot y)$
+	\item $\always (x \implies \next \next y \lor \next y \lor y)$
+	\item $\always (x \implies (r_1 \implies \next r_1 \land \lnot r_1 \implies \next \lnot r_1 \land r_2 \implies \next r_2 \land \lnot r_2 \implies \next \lnot r_2))$
+	\item $\always \eventually r_1$
+	\end{enumerate}
 	
+	\subsection*{Exercise 5.4}
+	Let us introduce the following definitions: PR = Peter.Request, PU = Peter.Use, PL = Peter.Release and with BR, BU, BL the correspondent for Betsy. 
+	\begin{enumerate}[label=(\alph*)]
+		\item $\always (\lnot PU \lor \lnot BU)$
+		\item $\always (PU \land \eventually \lnot PU) \lor (BU \land \eventually \lnot BU) \lor (\lnot BU \land \lnot PU)$
+		\item $\always (PR \land \eventually PU) \lor (BR \land \eventually BU) \lor (\lnot PR \land \lnot BR)$
+		\item $\always (\eventually PR \land \eventually BR)$
+		\item $\always ((PU \land \next (\lnot PU \; \mathcal{U}\; BU)) \lor (BU \land \next (\lnot BU  \; \mathcal{U}\; PU))) \land (a)$
+	\end{enumerate}
+	\subsection*{Exercise 5.5}
+	\begin{enumerate}[label=(\alph*)]
+		Let $E_i$ denote the atomic proposition "the elevator is at the i-th floor", $O_i$ denote the atomic proposition "the i-th floor's door is open", $R_i$ denote "the elevator is requested at the i-th floor".
+		\item $(\bigvee_{i=0})^{N-1}E_i \land O_i$
+		\item $\always \bigwedge_{i=0}^{N-1}(\always \lnot ( E_i \land O_i) \land \lnot R_i)$
+		\item $\always \eventually E_0$
+		\item $\always ((\lnot \bigwedge_{i=0}^{N-2} (\lnot E_i) \; \mathcal{U} \; E_{N-1}) \land \lnot R_{N-1})$
+	\end{enumerate}
+	\subsection*{Exercise 5.6}
+	 Consider $\phi=a$ and $\psi=b$.
+	\begin{enumerate}[label=(\alph*)]
+		\item They are not equivalent. $\{a\}\emptyset\{b\}^\omega$ satisfies the formula on the left but not the one on the right.
+		\item They are equivalent. If $S \models \eventually \always \phi \rightarrow \always \eventually \psi$ then either $\phi$ is not eventually always true or it is and this implies $\psi$ is always eventually true. Let's put ourselves in the first case, then consider any $S_i$. 
+		\begin{itemize}
+			\item If  $S_i \models \phi$ then take the first $S_k$ such that $S_k \models \lnot \phi$, thing we can do because $\lnot S_i \models \eventually \always \phi$ and moreover $\lnot S_i \models \always \phi$. Then $\forall i < j < k. S_j \models \phi$ because $k$ was chosen minimal, and thus $S_i \models \phi \; \mathcal{U} \; (\psi \lor \lnot \phi)$. 
+			\item If $\lnot S_i \models \phi$ then we are immediately done because we chose as prefix where $\phi$ holds the empty one.
+		\end{itemize}
+		Now, consider the case where $S \models \eventually \always \phi$, that is, there exists minimal $k$ such that $S_k \models \always \phi$. Then it must also be true that $S \models \always \eventually \psi$. Consider any $S_i$:
+		\begin{itemize}
+			\item If $i < k$ we use the same reasoning as above as we are sure $\exists t. i\le t<k$ such $S_t \models \lnot \phi$ as, if that was not the case, $S_t \models \always \phi$ but $k$ was chosen to be minimal index such that $S_k \models \always \phi$ and $t<k$.
+			\item If $i \ge k$ the reasoning above does not apply as there is no next state where $\lnot \phi$ holds. But we know $S_i \models \eventually \psi$ so there must exist $t\ge i$ such that $S_t \models \psi$ so $S_t \models \psi \lor \lnot \phi$ and since $\forall i \le j < t S_j \models \phi$ we have $S_i \models \phi \; \mathcal{U} \; (\psi \lor \lnot \phi)$. 
+		\end{itemize}
+		Now lets prove the opposite direction, namely that $(S \models \always (\phi \; \mathcal{U} \; (\lnot \phi \lor \psi))) \implies (S \models \eventually \always \phi \rightarrow \always \eventually \psi)$.
+		Let's work by contradiction, so we assume $S \models \eventually \always \phi \land \lnot S \models \always \eventually \psi$. By the latter part of the conjugation we know there exists a $S_j$ such that $\lnot S_j \models \eventually \psi$, i.e. $S_j \models \always \lnot \psi$.
+		By the first part of the conjugation we know there exists $k$ such that $S_k \models \always \phi$ so let $p=max(k, j)$.
+		Then, $S_p \models \always (\phi \land \lnot \psi)$ so $\lnot S_p \models \eventually (\lnot \phi) \lor \eventually \psi$ thus it cannot satisfy $\phi \; \mathcal{U} \; (\lnot \phi \lor \psi)$ but we assumed $S \models \always \phi \; \mathcal{U} \; (\lnot \phi \lor \psi)$, contradiction.
+		\item $\always$ is idempotent, so $\always \always (\phi \lor \lnot \psi) \equiv \always (\phi \lor \lnot \psi)$. The rest is DeMorgan, so they are equivalent.
+		\item $\{a\}\{b\}\emptyset^\omega \models \eventually \phi \land \eventually \psi$ but $\lnot (\{a\}\{b\}\emptyset^\omega \models \eventually (\phi \land \psi))$
+		\item They are equivalent. In particular any structure satisfying $\always \phi$ also satisfies $\next \eventually \phi$.
+		\item $\{a\}\emptyset^\omega \models \eventually \phi$ but $\lnot \{a\}\emptyset^\omega \models \eventually \phi \land \next \always \phi$ as $\lnot \{a\}\emptyset^\omega \models \next \always \phi$ because $\lnot \emptyset^\omega \models \always \phi$.
+		\item They are not equivalent. $\{a\}\emptyset^\omega \models (\always \eventually \phi) \rightarrow (\always \eventually \psi)$ vacuously but $\lnot (\phi \rightarrow \eventually \psi)$ as it requires at least an index $k$ such that $S_k \models \psi$ but clearly no set contains $b$.
+		\item They are equivalent, this is a basic duality notion.
+		\item If $\phi_1 \not \equiv \phi_2$ this is easily not always true. If $\phi_1 \equiv \phi_2$ then they are equivalent: 
+		Suppose $k > 0$ and $S_k \models \phi_1$ then take $k'=k-1$ and $S_{k'} \models \next \phi_1 \iff S_{k'} \models \next \phi_2$ that is $S \models \eventually \next \phi_2$. Where we used equivalence in the $\iff$.
+		\item They are equivalent. If $S \models (\eventually \always \phi_1) \land (\eventually \always \phi_2)$ then there are two indexes $i, j$ such that $S_i \models \always \phi_1$ and $S_j \models \always \phi_2$. So $S_{\max(i, j)} \models (\always (\phi_1 \land \phi_2))$. For the other direction by the same reasoning you obtain $i=j$.
+		\item They are equivalent. 
+		\begin{itemize}
+			\item $\implies$: assume $S \models (\phi_1 \; \mathcal{U} \; \phi_2) \; \mathcal{U} \; \phi_2$ then $\exists k. S_k \models \phi_2 \land \forall i < k S_i \models (\phi_1 \; \mathcal{U}\; \phi_2)$, where such $k$ is minimal.
+			Then $S_i \models \lnot \phi_2$ which implies $S_i \models \phi_1$, by until semantics. Thus $\forall i < k. S_i \models \phi_1$. 
+			\item $\impliedby$: assume $S \models (\phi_1 \; \mathcal{U} \; \phi_2)$ then there $\exists k. S_k \models \phi_2 \land \forall i < k. S_i \models \phi_1 \land \lnot \phi_2$. We need to prove $\forall i < k. S_i \models \phi_1 \; \mathcal{U} \; \phi_2$ i.e. that there exists $t\ge i$ such that $S_t \models \phi_2$ and $\forall i \le j < t. S_j \models \phi_1$. Take $t=k$.
+		\end{itemize}
+		\end{enumerate}
+		\subsection{Exercise 5.7}
+		\begin{enumerate}[label=(\alph*)]
+			\item $\phi \;\text{N}\; \psi \equiv \lnot \psi \; \mathcal{W} \; (\phi \land \psi)$
+			\item $\phi \;\text{W}\; \psi \equiv \phi \; \mathcal{W} \; \lnot \psi$
+			\item $\phi \;\text{B}\; \psi \equiv (\eventually \psi \rightarrow (\phi \; \mathcal{U} \; \psi )$ if the \textit{before} is to be intended as non-strictly before otherwise if $\phi$ needs to be satisfied in a moment strictly before I propose $\eventually \psi \rightarrow (\phi \; \mathcal{U} \; (\psi \land \lnot \phi ))$
+		\end{enumerate}
+	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
 		\centering    
