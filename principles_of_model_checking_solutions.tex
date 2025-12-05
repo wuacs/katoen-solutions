@@ -7,11 +7,16 @@
 \usepackage{titling}
 \usepackage{enumitem}
 \usepackage{algorithm}
-\usepackage{algpseudocode}
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usepackage{logix}
+
+\usepackage{algpseudocode}
+\let\AlgoForAll\ForAll   % save algpseudocode's \ForAll
+\let\ForAll\relax        % clear it so logix can define its own
+\usepackage{logix}       % defines its own \ForAll (quantifier)
+\let\LogicForAll\ForAll  % save logix's quantifier version
+\let\ForAll\AlgoForAll   % restore algpseudocode's \ForAll as the default
 
 \usetikzlibrary{automata,positioning}
 \title{Principles Of Model Checking Exercises Solutions}
@@ -22,6 +27,7 @@
 \let\next\FacNext
 \let\eventually\FacPos
 \let\always\FacNec
+
 
 \begin{document}
 	
@@ -1121,7 +1127,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\end{figure}
 		\end{enumerate}
 	\end{enumerate}
-	\section{5 Linear Time Properties}
+	\section{Linear Time Logic}
 	\subsection*{Exercise 5.1}
 	Let $S=\{s_1, s_2, s_3, s_4\}$.
 	\begin{enumerate}[label=(\arabic*)]
@@ -1159,8 +1165,8 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\item $\always ((PU \land \next (\lnot PU \; \mathcal{U}\; BU)) \lor (BU \land \next (\lnot BU  \; \mathcal{U}\; PU))) \land (a)$
 	\end{enumerate}
 	\subsection*{Exercise 5.5}
+	Let $E_i$ denote the atomic proposition "the elevator is at the i-th floor", $O_i$ denote the atomic proposition "the i-th floor's door is open", $R_i$ denote "the elevator is requested at the i-th floor".
 	\begin{enumerate}[label=(\alph*)]
-		Let $E_i$ denote the atomic proposition "the elevator is at the i-th floor", $O_i$ denote the atomic proposition "the i-th floor's door is open", $R_i$ denote "the elevator is requested at the i-th floor".
 		\item $(\bigvee_{i=0})^{N-1}E_i \land O_i$
 		\item $\always \bigwedge_{i=0}^{N-1}(\always \lnot ( E_i \land O_i) \land \lnot R_i)$
 		\item $\always \eventually E_0$
@@ -1206,6 +1212,236 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\item $\phi \;\text{W}\; \psi \equiv \phi \; \mathcal{W} \; \lnot \psi$
 			\item $\phi \;\text{B}\; \psi \equiv (\eventually \psi \rightarrow (\phi \; \mathcal{U} \; \psi )$ if the \textit{before} is to be intended as non-strictly before otherwise if $\phi$ needs to be satisfied in a moment strictly before I propose $\eventually \psi \rightarrow (\phi \; \mathcal{U} \; (\psi \land \lnot \phi ))$
 		\end{enumerate}
+		\section{Computation Tree Logic}
+		\subsection*{Exercise 6.8}
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
+				\node[state, fill=yellow] (q_1) [below left=of q_0] {$q_1$}; 
+				\node[state, fill=yellow] (q_2) [below right=of q_0] {$q_2$}; 		
+				\node[state, fill=red] (q_3) [below=of q_2] {$q_3$}; 
+				\node[state, fill=orange] (q_4) [below=of q_1] {$q_4$};
+				
+				\node[state,initial, fill=green] (t_0) [right=5cm of q_0] {$t_0$}; 
+				\node[state, fill=yellow] (t_1) [below=of t_0] {$t_1$}; 		
+				\node[state, fill=red] (t_2) [below left=of t_1] {$t_2$}; 
+				\node[state, fill=orange] (t_3) [below right=of t_1] {$t_3$};
+				
+				\path[->] 
+				
+				(q_0) edge  node {} (q_1)
+				edge node {} (q_2)
+				(q_1) edge  node  {} (q_4)
+				(q_2) edge node {} (q_3)
+				(q_3) edge [loop below] node {} ()
+				(q_4) edge [loop below] node {} ()
+				
+				(t_0) edge node {} (t_1)
+				(t_1) edge node {} (t_2)
+				(t_1) edge node {} (t_3)
+				(t_2) edge [loop below] node {} ()
+				(t_3) edge [loop below] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.8}
+			\label{fig:ex6.8}
+		\end{figure}
+		The two transition systems are trace equivalent but the one on the left does not satisfy the CTL formula $\forall \next \exists \next \textit{red}$
+		\subsection*{Exercise 6.13}
+		The implication is false, as removing paths in $TS'$ may invalidate state formulas previously true in $TS$. Suppose $\Phi=\textit{green}$ and $\Psi=\exists \next \textit{red}$. Then removing the transition from $q_1$ to $q_2$ makes $q_1$ not satisfy anymore $\Psi$ and as a consequence no reachable state satisfies $\exists \next \textit{red}$.
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
+				\node[state, fill=yellow] (q_1) [below left=of q_0] {$q_1$}; 
+				\node[state, fill=red] (q_2) [below right=of q_1] {$q_2$}; 		
+				
+				\node[state,initial, fill=green] (t_0) [right=5cm of q_0]  {$t_0$}; 
+				\node[state, fill=yellow] (t_1) [below left=of t_0] {$t_1$};
+				\node[state, fill=red] (t_2) [below right=of t_1] {$t_2$};
+				\path[->] 
+				
+				(t_0) edge  node {} (t_1)
+
+				
+				(q_0) edge  node {} (q_1)
+				(q_1) edge  node  {} (q_2)
+				edge [loop right] node {} ()
+				(q_2) edge [loop right] node {} ();
+				
+				
+			\end{tikzpicture}
+			\caption{Exercise 6.13; implication counterexample}
+			\label{fig:ex6.13}
+		\end{figure}
+				
+		The other direction is true: suppose there is a path $\pi$ that leads in \textit{TS'} to a state $\gamma$ where $\Psi$ holds, then, all the states preceding $\gamma$ in $\pi$ satisfy $\Phi \land \lnot \Psi$ because they have outgoing transitions (among which the ones we use to arrive at $\gamma$). This implies $\pi$ satisfies $\Phi U \Psi$ and since $\pi$ is a path of \textit{TS'} it also a path in \textit{TS}.
+	
+	\subsection*{Exercise 6.15}
+	
+	\begin{enumerate}[label=(\alph*)]
+		\item The LTL formula $\Phi_2 = \eventually (a \land \next a)$ is not equivalent to $\Phi_1$. Consider the transition system in \ref{fig:ex6.15:a}, which satisfies $\Phi_1$ and not $\Phi_2$ (because the path $q_0 (q_2)^\omega$ does not satisfy it).
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
+				\node[state, fill=yellow] (q_1) [below left=of q_0] {$q_1$}; 
+				\node[state, fill=red] (q_2) [below right=of q_0] {$q_2$}; 		
+				
+				\path[->] 
+				
+				(q_0) edge  node {} (q_1)
+				edge node {} (q_2)
+				(q_1) edge [loop left] node {} ()
+				(q_2) edge [loop right] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.15 a)}
+			\label{fig:ex6.15:a}
+		\end{figure}
+		\item We want to prove that $\Phi_2 \eqdef \forall \eventually \exists \next \forall \eventually \lnot a $ has no LTL equivalent formula. We use the fact that if $Traces(TS) \subseteq Traces(TS')$ and $TS'$ satisfies an LTL formula $\phi$, also $TS$ satisfies it $\phi$. Suppose that an LTL counterpart existed, call it $\Psi_2$. Take the transition system on the left in \ref{fig:ex6.15:b}, if we rename $a$ as $green$ then it satisfies $\Phi_2$ as any of state in the two only possible paths $(q_0)^*(q_1)^{\omega}, (q_0)^\omega$ satisfy $\exists \next \forall \eventually \lnot a$: this path is exactly $q_1^\omega$. Thus it also satisfies $\Psi_2$ by equivalence. However, if we take the right transition system, we see that its traces are only $green^\omega$ (the one obtained by the only admissible path $(q_0)^\omega$) and thus it does not satisfy $\Phi_2$, contradiction.
+			\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
+				\node[state, fill=yellow] (q_1) [below=of q_0] {$q_1$}; 		
+				\node[state, initial, fill=green] (t_0) [right=5cm of q_0]{$t_0$};
+				\path[->] 
+				(t_0) edge [loop right] node {} ()
+				(q_0) edge  node {} (q_1)
+				edge [loop right] node {} ()
+				(q_1) edge [loop right] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.15 b)}
+			\label{fig:ex6.15:b}
+		\end{figure}
+	\end{enumerate}
+	\newpage
+	\subsection*{Exercise 6.17}
+	See the pseudo code here \ref{fig:ex6.17}
+		\begin{algorithm}
+			\caption{Computing $Sat(\forall(\Phi \,\mathsf{U}\, \Psi))$}
+			\label{fig:ex6.17}
+			\begin{algorithmic}[1]
+				\Procedure{SatComputing}{$TS = (S, Act, \rightarrow, I, AP, L), \Phi, \Psi$}
+				\State $E \gets \Call{Sat}{\Phi}$
+				\State $Q \gets \Call{Sat}{\Psi}$
+				\State $V \gets Q$
+				\State $M \gets \text{HashMap}[S, Int]$
+				\ForAll{$x \in S$}
+				\State $M[x] \gets |\mathit{succ}(x)|$
+				\EndFor
+				\While{$Q \neq \emptyset$}
+				\State $q \gets \Call{Extract}{Q}$
+				\ForAll{$x \in \mathit{pred}(q)$}
+				\If{$x \notin Q \land x \in E$}
+				\State $M[x] \gets M[x] - 1$
+				\If{$M[x] = 0$}
+				\State \Call{Add}{$Q, x$}
+				\State $V \gets V \cup \{x\}$
+				\EndIf
+				\EndIf
+				\EndFor
+				\EndWhile
+				\State \Return $V$
+				\EndProcedure
+			\end{algorithmic}
+		\end{algorithm}
+	\subsection*{Exercise 6.18}
+	\begin{enumerate}[label=(\alph*)]
+		\item We need to prove that for any state $x \in S$, $x \in Sat(\exists (\Phi W \Psi)) \iff x \in T^*$ where $T^*$ is the greatest subset of $S$ such that it satisfies the recurrence:
+		$$
+		T \subseteq Sat(\Psi) \cup \{s \in Sat(\Phi) | post(s) \cap T \neq \emptyset\}
+		$$
+		One can find $T^*$ by finding the greatest fix point of a function $\mathcal{F}: \mathcal{P}(S) \mapsto \mathcal{P}(S)$ defined as $\mathcal{F}(x)=Sat(\Psi) \cup \{s \in S | post(s) \cap x \neq \emptyset \}$. The existence of a fixed point is guarantee because $\mathcal{P}(S)$ is a complete lattice and $\mathcal{F}$ is monotone on the order $\preceq$ defined as $x \preceq y \iff y \subseteq x$, using Knaster-Tarski.
+		\begin{itemize}
+			\item $\implies$: assume $x$ is in the satisfying set and suppose $x \notin T^*$. By hypothesis we know there exists a path $\pi \in Paths(x)$ such that $\pi \models \Phi W \Psi$, this means that either $\Psi$ is true for a $\pi_k$  and $\forall i < k. \pi \models \Phi \land \lnot \Psi$ or $\forall j. \pi_j \models \lnot \Psi \land \Phi$.
+			\begin{enumerate}
+				\item In the case such a $\pi_k$ exists it implies that $\pi_k \in T^*$ since $\pi_k \in Sat(\Psi)$ and $T^*$ is maximal. Then by backward induction we can prove that all states $\pi_1,...,\pi_k$ are part of $T^*$, where the base case is $i=k$ and the inductive case is $i-1$ assuming $\{\pi_i, ..., \pi_k \} \subseteq T^*$ and by using the right hand side of the equation, since $\pi_{i-1}$ satisfies $\Phi$ by hypothesis, and therefore maximality forces $\pi_{i-1}\in T^*$.
+				\item In the case there is no such state, all the states in $\pi$ satisfy $\Phi$. We need to show that adding all states in $\pi$, and thus adding $\pi_1=x$, does not violate the recurrence, and hence all those states must already be present in $T^*$ by maximality. Suppose $T' = T^* \cup \{\pi_1,...\}$.
+				Take any state $\pi_t$ in $\pi$, since we added $\pi_{t+1}$ and we assumed $\pi_t \in Sat(\Phi)$ by the right hand side condition $\pi_t \in Sat(\Psi) \cup \{s \in Sat(\Phi) | post(s) \cap T' \neq \emptyset\}$ and thus $T'$ satisfies the condition. Since we can repeat this reasoning for all states traversed in $\pi$ and $T^*$ was the maximal set that satisfied the recurrence it implies $T' \subseteq T^*$ i.e. $x \in T^*$.
+			\end{enumerate}
+		\item $\impliedby$: 
+		We will prove the contra-positive: $x \models \forall (\lnot \Psi U \lnot \Psi \land \lnot \Phi) \implies x \notin T^*$ and we will do it by induction on the iteration of the operator, which we define as $\mathcal{F}^0(S)=S, \mathcal{F}^{i+1}(S)=\mathcal{F}(\mathcal{F}^i(S))$.
+		Suppose $k$ is the iteration number of the fixed point, i.e. $\mathcal{F}^{k+1}(S)=\mathcal{F}^k(S)$.
+	Take $Paths(x) = \{\pi_1, \dots \}$, by our assumption, in every such path it exists a minimal index such that ${\pi_i}^j \models \lnot \Psi \land \lnot \Phi$, call the set of those indexes "boundaries". Take the maximum one and call it $\omega$. Then we want to prove that $x \notin \mathcal{F}^{\omega}(S)$. Notice that after this proof we know $x \notin T^*$ as our operator is monotone. We want to use induction but to do this we need to define a partial order: let $X$ be the set of states $\{(\pi^j_i, i, j) | j \le \text{ boundary index for } \pi_i \}$ and define a total order $(x, y, z) \preceq (x', y', z')  \iff z < z' \lor (z = z' \land y < y')$. That is each state of each path is labeled by an unique integer (second component) and its position in its own path(third component).
+	Now by induction on this partial order (where the base case is going to be the maximal element) we prove that each of those states is eventually removed. We use naturals to denote the elements of the partial order. Let $Z$ be the maximal element.
+		\begin{itemize}
+			\item Base case: $i=Z$. The maximal element of this total order is a state which has the third component maxed, i.e. it is the boundary index of some path. Thus it satisfies $\lnot \Psi \land \lnot \Phi$ and by the same reasoning it is eliminated after the first iteration of $\mathcal{F}$.
+			\item Inductive case: $i-1$. Suppose all states represented by labels greater than $i-1=(x, y, z)$ have been eliminated. Then take any path such that is equal to $\pi_y$ up to the $z$ state, then any path that extend from $z$ have been eliminated by inductive hypothesis. Thus also $x$ is removed.
+		\end{itemize}
+		\end{itemize}
+	\end{enumerate}
+	The other point is similar.
+	\subsection*{Exercise 6.20}
+	For $\exists (\Phi R \Psi) = \lnot \forall ((\lnot \Phi) U (\lnot \Psi))$:
+	$$
+	\exists \Phi R \Psi \equiv \exists ((\lnot \Phi \land \Psi) U (\Phi \land \Psi)) \lor \exists (\always (\Psi \land \lnot \Phi)) 
+	$$
+	so an expansion law for this operator is simply:
+	$$
+	\exists \Phi R \Psi \equiv ((\lnot \Phi \land \Psi) \land \exists \next \exists \Phi R \Psi) \lor (\Phi \land \Psi) \equiv \Psi \land (\Phi \lor (\exists \next \exists \Phi R \Psi)).
+	$$
+	for $\forall (\Phi R \Psi)\equiv \Psi \land (\Phi \lor \forall \next \forall \Phi R \Psi)$.
+	\subsection*{Exercise 6.21}
+	\begin{enumerate}[label=(\alph*)]
+		\item $Sat(\Phi_1)=\{s_2, s_3\}$. To compute $Sat(\Psi_1)$ one needs to take only states satisfying $a \land \lnot b = \{s_5\}$ and then take the preceding nodes satisfying $b$, i.e. $Sat(\Psi_1)=\{s_0, s_2\}$.
+		\item To compute $Sat_{sfair}(\exists\always true)$ one takes all the states in the transition system (the ones satisfying $true$), and then compute the SCCs: $SC_1= \{s_0, s_1\}, SC_2 =\{s_2, s_5\}, SC_3 = \{s_3, s_4\}$. Then we check those against $s_{fair}$: 
+		\begin{itemize}
+			\item Since $SC_1=\{s_0,s_1\}\cap Sat(\Phi_1) = \emptyset$ we find that both of those states are in $Sat_{sfair}(\exists \always true)$.
+			\item Since $SC_2=\{s_2, s_5\}\cap Sat(\Phi_1) = \{s_2\}$ and $SC_2 \cap Sat(\Psi_1)\neq \emptyset$ we have $SC_2 \subset Sat_{sfair}(\exists \always true)$.
+			\item Since $SC_3=\{s_3, s_4\}\cap Sat(\Phi_1) \neq \emptyset$ and $SC_3\cap Sat(\Psi_1) = \emptyset$ we need to remove $s_3$, however, $\{s_4\}$ is not anymore a connected component.
+		\end{itemize}
+		So in conclusion $Sat_{sfair}(\exists \always true)=\{s_0, s_1, s_2, s_5\}$
+		\item First we put the formula in \textbf{ENF}: $\Phi\equiv \exists \eventually \exists \always \lnot a$. So we compute first $Sat(\lnot a)=\{s_1, s_2, s_3, s_4\}$ and then remove all but $Sat(\lnot a)$ states and then search for SCCs: $SC_3$ is the only SCC such that all of its states are present in $Sat(\lnot a)$. However, no state in $SC_3$ has fair paths, so $Sat_{sfair}(\exists \forall \lnot a)=\emptyset$.
+		By the same reasoning no state satisfies $\exists \eventually \exists \always \lnot a$ so we conclude $Sat_{sfair}(\Phi)=\emptyset$.
+	\end{enumerate}
+	\subsection*{Exercise 6.22}
+	\begin{enumerate}[label=(\alph*)]
+		\item This is false: the right part is strictly stronger as it requires all paths exiting the start node to be fair. Assume the unconditional fair assumption $\always \exists yellow$.
+		A counter-example is shown in \autoref{fig:ex6.22:a} where the given transition systems satisfies that for any fair path \textit{green U yellow } but it does not satisfy, for the path $q_0, (q_2)^\omega$ the path formula \textit{green U (yellow $\land a_{fair}$)}.
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
+				\node[state, fill=yellow] (q_1) [below left=of q_0] {$q_1$}; 		
+				\node[state, fill=green] (q_2) [below right=of q_0]{$q_2$};
+				
+				\path[->] 	
+				(q_0) edge	node {} (q_1)
+				edge node {} (q_2)
+				(q_1) edge	[loop below] node {} ()
+				(q_2) edge [loop right] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.15 b)}
+			\label{fig:ex6.22:a}
+		\end{figure}
+		\item Consider the fairness assumption $\always \eventually yellow$ and $a=green, b=yellow$. Consider the transition system shown in \autoref{fig:ex6.22:b}: it satisfies $\exists (a W (b \land a_{fair}))$ since $a$ is forever true and $b \land a_{fair}$ stays forever false (as $a_{fair}$ is false). However, this transition system does not have any fair path satisfying $\exists (a W b)$.
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
+				\path[->] 	
+				(q_0) edge	[loop right] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.15 b)}
+			\label{fig:ex6.22:b}
+		\end{figure}
+		\item We show the two direction separately:
+		\begin{itemize}
+			\item $\implies$: we want to prove that $\forall \pi \in Paths(s)$ we have $\pi \models (a \verb|W| (a_{fair} \implies b))$, meaning it must be either:
+			\begin{itemize}
+				\item If $\pi$ is a fair path then by assumption we know either: 
+				\begin{itemize}
+					\item there is a index $k'$ such that $\pi_{k'} \models b$ and $\forall j < k'. \pi_j \models a$ then take $k=k'$, then $\pi_k \models a_{fair} \implies b$ and $\forall i < k$ we have $\pi_i \models a$.
+					\item for all states it holds $\lnot b \land a$ so $a_{fair} \implies b$ will always be false (as $a_{fair}$ is always true on a fair path) but this is accepted by the weak until semantics.
+				\end{itemize}
+				\item If $\pi$ is not a fair then either:
+				\begin{itemize}
+					\item There is a finite prefix $\pi_1,...,\pi_k$ where $a_{fair}$ holds, and, thus $\pi_1,..., \pi_k$ is a prefix of some fair path and thus either $b$ has been satisfied in $\pi_1, ..., \pi_k$ (and then the reasoning above applies) or it will be satisfied by following some other fair path (or it will never be satisfied). In both latter cases, we have $\pi_1, ..., \pi_k \models a$ and thus, since $\pi_{k+1} \models \lnot a_{fair}$ we have $\pi_{k+1} \models (a_{fair} \implies b)$.
+					\item If $\forall \pi_i. \pi_i \models a_{fair}$ but it is an unfair path, then each $\pi_i$ is part of some fair path with prefix $\pi_1, \dots, \pi_i$. Which means either $a \verb|W| b$ is satisfied by some prefix $\pi_1, \dots, \pi_i$ and then we fall in the first case of the preceding point, or $\forall \pi_i. \pi_i \models a \land \lnot b$. Which is ok for the formula $a \verb|W| (a_{fair} \implies b)$.
+				\end{itemize}
+			\end{itemize}
+			\item $\impliedby$: take any fair path $\pi$ then we want to prove $\pi \models a \verb|W| b$ assuming $\pi \models a \verb|W| (a_{fair} \implies b)$. By our assumption we know two cases can occur:
+			\begin{itemize}
+				\item $\forall \pi_i. \pi_i \models a \land \pi_i \models (\lnot b \land a_{fair})$. Which also means $\forall \pi_i. \pi_i \models a \land \lnot b$ which implies $\pi \models a \verb|W| b$.
+				\item $\exists k. \pi_k \models (\lnot a_{fair} \lor b)$. In this case if $\pi_k \models b$ it easy to finish the proof. But if $\pi_k \models \lnot b?$. Then we just know $\pi_k \models \lnot a_{fair}$, but remember $\pi$ is a fair path, i.e. $\forall \pi_i . \pi_i \models a_{fair}$. So it can only be that $\pi_k \models b$. 
+			\end{itemize}
+		\end{itemize}
+	\end{enumerate}
 	\newpage
 	\subsection{Appendix}
 		\begin{figure}[H]
