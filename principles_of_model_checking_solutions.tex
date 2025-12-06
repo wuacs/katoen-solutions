@@ -10,7 +10,7 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{tikz}
-
+\usetikzlibrary{calc, cd}
 \usepackage{algpseudocode}
 \let\AlgoForAll\ForAll   % save algpseudocode's \ForAll
 \let\ForAll\relax        % clear it so logix can define its own
@@ -27,6 +27,28 @@
 \let\next\FacNext
 \let\eventually\FacPos
 \let\always\FacNec
+
+
+% taken from https://tex.stackexchange.com/questions/657269/three-colors-in-a-node-tikz
+% to primarily give properties to automatons in visual color-oriented way instead of annotating.
+\tikzset{
+	node split radius/.initial=1,
+	node split color 1/.initial=red,
+	node split color 2/.initial=green,
+	node split color 3/.initial=blue,
+	node split half/.style={node split={#1,#1+180}},
+	node split/.style args={#1,#2}{
+		path picture={
+			\tikzset{
+				x=($(path picture bounding box.east)-(path picture bounding box.center)$),
+				y=($(path picture bounding box.north)-(path picture bounding box.center)$),
+				radius=\pgfkeysvalueof{/tikz/node split radius}}
+			\foreach \ang[count=\iAng, remember=\ang as \prevAng (initially #1)] in {#2,360+#1}
+			\fill[line join=round, draw, fill=\pgfkeysvalueof{/tikz/node split color \iAng}]
+			(path picture bounding box.center)
+			--++(\prevAng:\pgfkeysvalueof{/tikz/node split radius})
+			arc[start angle=\prevAng, end angle=\ang] --cycle;
+} } }
 
 
 \begin{document}
@@ -1400,7 +1422,6 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
 				\node[state, fill=yellow] (q_1) [below left=of q_0] {$q_1$}; 		
 				\node[state, fill=green] (q_2) [below right=of q_0]{$q_2$};
-				
 				\path[->] 	
 				(q_0) edge	node {} (q_1)
 				edge node {} (q_2)
@@ -1441,6 +1462,117 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 				\item $\exists k. \pi_k \models (\lnot a_{fair} \lor b)$. In this case if $\pi_k \models b$ it easy to finish the proof. But if $\pi_k \models \lnot b?$. Then we just know $\pi_k \models \lnot a_{fair}$, but remember $\pi$ is a fair path, i.e. $\forall \pi_i . \pi_i \models a_{fair}$. So it can only be that $\pi_k \models b$. 
 			\end{itemize}
 		\end{itemize}
+	\end{enumerate}
+	\subsection*{Exercise 6.23}
+	\begin{itemize}
+		\item $Sat_{sfair}(\exists \always \verb|true|)$: first we rewrite the fairness assumptions by replacing sub-formulas with appropriate atomic propositions:
+		\begin{itemize}
+			\item $sfair_1=\always \eventually (\forall \eventually a_1 \lor a_3) \implies \always \eventually a_4$. So we first compute $Sat(\forall \eventually a_1 \lor a_3)$ by using a standard CTL Model Checker procedure. We put it in \textbf{ENF} obtaining $\exists \always \lnot a_1 \land \lnot a_3$. Then $Sat(\lnot a_1 \land \lnot a_3)=\{s_1, s_3, s_8\}$. Then $Sat(\exists \always \{s_1, s_3, s_8\})$ is obtained as greatest fix point of the operator $F(X)$ defined as:
+			$$
+			F(X) = \{s_1, s_3, s_8\} \land \exists \next F(X)
+			$$
+			which is the set $Sat(\forall \eventually a_1 \lor a_3 ) = \{s_8\}$. Then, we can rewrite $sfair_1$ as:
+			$$
+			\always \eventually \{s_8\} \implies \always \eventually \{s_3, s_8\}
+			$$ where $\{s_i, s_j, \dots \}$ is a short-hand for an atomic proposition valid only on states $s_i, s_j, \dots$.
+			\item $sfair_2 = \always \eventually (a_3 \land \lnot a_4) \implies \always \eventually a_5$ can be rewritten as:
+			$$
+			\always \eventually \{s_2, s_7\} \implies \always \eventually \{s_4, s_7\}
+			$$
+			\item $sfair_3 = \always \eventually (a_2 \land a_5) \implies \always \eventually a_6$ can be rewritten as 
+			$$
+			\always \eventually \{s_7\} \implies \always \eventually false
+			$$
+		\end{itemize}
+		Then, we proceed by finding the SCCs: $SC_1 = \{s_2, s_3, s_4\}, SC_2 = \{s_5, s_6, s_7, s_8\}$ and check whether those satisfy the fairness assumptions:
+		\begin{itemize}
+			\item $SC_1$ has non-empty intersection with the antecedent of the second fairness assumption, but it has also non-empty intersection with the consequent so we conclude that all states that can reach $SC_1$ are in $Sat_{fair}(\exists \always true)$.
+			\item $SC_2$ has non-empty intersection with the third antecedent, thus $s_7$ must be removed, as \textit{false} is not satisfied by any state in the SCC. After this operation we obtain the only sub-SCC $SC_3 = \{s_8\}$ which we have to recursively check for fairness.
+			\begin{itemize}
+				\item $SC_3$ has non-empty intersection with the first antecedent, however, it has also non-empty intersection with the consequent and thus all states that can reach $s_8$ are in $Sat_{fair}(\exists \always true)$.
+			\end{itemize}
+		\end{itemize}
+		So we conclude that all states have a fair path, $Sat_{fair}(\exists \always true)=S$
+		\item To compute $Sat_{fair}=\Phi$ we need:
+		\begin{enumerate}
+			\item $Sat_{fair}(\exists a_1 \verb|U| a_2)$, so we first compute $Sat(\exists a_1 \verb|U| a_2)$ by least fixed point over the monotone operator $L(X)$ defined as:
+			$$
+			L(X) = a_2 \lor ((\exists \next L(X)) \land a_1) 
+			$$
+			which is $S \setminus \{s_1, s_2\}$.
+			Since every state has a fair path, $Sat_{fair}(\exists a_1 \verb|U| a_2)=Sat(\exists a_1 \verb|U| a_2) = S \setminus \{s_1, s_2\}$.
+			\item We can then rewrite $\Phi$ as 
+			$$\exists \next (\{s_2, s_4, s_5, s_6\} \implies S \setminus \{s_1, s_2\})$$
+			 We then search for $ Sat(S \setminus \{s_2, s_4, s_5, s_6\} \lor (S \setminus \{s_1, s_2\}))=S \setminus \{s_2\}$. So $\exists \next (S \setminus \{s_2\})=S$.
+		\end{enumerate}
+	\end{itemize}
+	\subsection*{Exercise 6.26}
+	\begin{enumerate}[label=(\alph*)]
+		\item They are equivalent. $s \models \forall \next \forall \always \Phi \iff \forall \pi \in Paths(s). \pi^1 \models \forall \always \Phi$. But any path, $\rho \in Paths(\pi^1_1)$, is the suffix of a path that starts from $s$, i.e. $s\cdot \rho$, so this is equivalent to $\forall \pi \in Paths(s). \pi^1 \models \always \Phi$ which is exactly the semantics of $\forall \next \always \Phi$.
+		\item They are equivalent by same reasoning of (a)
+		\item They are equivalent:
+		\begin{align*}
+			& s \models \forall (\phi \land \psi) \iff \\
+			& \forall \pi \in Paths(s). \pi \models \phi \land \psi \iff \\
+			& \forall \pi \in Paths(s). \pi \models \phi \land \pi \models \psi \iff \\
+			& s \models \forall \phi \land s \models \forall \psi
+		\end{align*}
+		\item They are not equivalent. Suppose $\phi = \next green, \psi = \next red$. The transition system in \autoref{fig:ex6.26:d} satisfies only the formula on the right. 
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial] (q_0)   {$q_0$}; 
+				\node[state, fill=green] (q_1) [below left=of q_0] {$q_1$}; 		
+				\node[state, fill=red] (q_2) [below right=of q_0]{$q_2$};
+				\path[->] 	
+				(q_0) edge	node {} (q_1)
+				edge node {} (q_2)
+				(q_1) edge	[loop below] node {} ()
+				(q_2) edge [loop right] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.26 d)}
+			\label{fig:ex6.26:d}
+		\end{figure}
+		\item They are equivalent. $\lnot \forall \implies \exists \lnot$ and then we apply DeMorgan on $\lnot \phi \lor \psi$.
+		\item They are not equivalent. Suppose $\Phi=green$. Consider the transition system in \autopageref{fig:ex6.26:f}. It satisfies the left formula as the path $(q_0 q_1)^{\omega}$, in any state, is allowed a path such that in the next state $green$ is allowed: in case we are in $q_0$ simply $(q_0 q_1)^\omega$, in case of $q_1$ we have $(q_1 q_2 q_0)^\omega$ as $q_2 \models green$. However there is no path such that $\next green$ is continuously satisfied.
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state,initial] (q_0)   {$q_0$}; 
+				\node[state, fill=green] (q_1) [below left=of q_0] {$q_1$}; 		
+				\node[state, fill=green] (q_2) [below right=of q_0]{$q_2$};
+				\path[->] 	
+				(q_0) edge [bend left] node {} (q_1)
+				(q_1) edge node {} (q_2)
+				edge node {} (q_0)
+				(q_2) edge node {} (q_0);
+			\end{tikzpicture}
+			\caption{Exercise 6.26 f)}
+			\label{fig:ex6.26:f}
+		\end{figure}
+		\item They are not equivalent. Consider $\Phi = green, \Psi = red$, then \autoref{fig:ex6.26:g} satisfies $\forall(\eventually \Psi \land \always \Phi)$ as the (only) path $q_0 (q_1)^\omega$ satisfies eventually red (by $q_0$) and always green (because both states satisfy green).
+		However, the transition system does not satisfy $\forall \always (\Phi \land \forall \eventually \Psi)$ because the path $\pi= q_0 (q_1)^\omega$ does not satisfy $\always (\Phi \land \forall \eventually \Psi)$: take $\pi^1$, from now on, it is true that it satisfies $\Phi$ but $\forall \eventually \Psi$ is not satisfied.
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state, initial, node split color 1= green, node split color 2 = red, node split half =90] (q_0)   {$q_0$}; 
+				\node[state, fill=green] (q_1) [below=of q_0] {$q_1$};
+				\path[->] 	
+				(q_0) edge [bend left] node {} (q_1)
+				(q_1) edge [loop below] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.26 g)}
+			\label{fig:ex6.26:g}
+		\end{figure}
+		\item They are different. Take $\Phi = green, \Psi = red$ and see \autoref{fig:ex6.26:h}. As $q_0$ does not satisfy $\Phi$ the transition system does not satisfy $\exists (\eventually \Psi \land \always \Phi)$. However, there is the (only) path $q_0(q_1)^\omega$ such that eventually $\Psi$ is satisfied (in the second state) and from there onward $\Phi$ is always satisfied.
+		\begin{figure}[H]
+			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+				\node[state, initial] (q_0)   {$q_0$}; 
+				\node[state, node split color 1= green, node split color 2 = red, node split half =90] (q_1) [below=of q_0] {$q_1$};
+				\path[->] 	
+				(q_0) edge [bend left] node {} (q_1)
+				(q_1) edge [loop below] node {} ();
+			\end{tikzpicture}
+			\caption{Exercise 6.26 h)}
+			\label{fig:ex6.26:h}
+		\end{figure}
 	\end{enumerate}
 	\newpage
 	\subsection{Appendix}
