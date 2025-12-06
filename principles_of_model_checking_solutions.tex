@@ -1228,12 +1228,14 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\item $\impliedby$: assume $S \models (\phi_1 \; \mathcal{U} \; \phi_2)$ then there $\exists k. S_k \models \phi_2 \land \forall i < k. S_i \models \phi_1 \land \lnot \phi_2$. We need to prove $\forall i < k. S_i \models \phi_1 \; \mathcal{U} \; \phi_2$ i.e. that there exists $t\ge i$ such that $S_t \models \phi_2$ and $\forall i \le j < t. S_j \models \phi_1$. Take $t=k$.
 		\end{itemize}
 		\end{enumerate}
-		\subsection{Exercise 5.7}
+		\subsection*{Exercise 5.7}
 		\begin{enumerate}[label=(\alph*)]
 			\item $\phi \;\text{N}\; \psi \equiv \lnot \psi \; \mathcal{W} \; (\phi \land \psi)$
 			\item $\phi \;\text{W}\; \psi \equiv \phi \; \mathcal{W} \; \lnot \psi$
 			\item $\phi \;\text{B}\; \psi \equiv (\eventually \psi \rightarrow (\phi \; \mathcal{U} \; \psi )$ if the \textit{before} is to be intended as non-strictly before otherwise if $\phi$ needs to be satisfied in a moment strictly before I propose $\eventually \psi \rightarrow (\phi \; \mathcal{U} \; (\psi \land \lnot \phi ))$
 		\end{enumerate}
+		\subsection*{Exercise 5.10}
+		Assume $n+1$ atomic propositions: $x_0, \dots, x_n$ then let $\phi_n \eqdef \lnot (\phi_{n-1} \verb|U| x_n)$ and $\phi_0 = x_0$. Then we get $|\phi_0|=1=2^0$. And for the recursive case we have $|\phi_n|=((\phi_{n-1} \land \lnot x_n) \verb|U| (\lnot \phi_{n-1} \land \lnot x_n)) \lor \always (\phi_{n-1} \land \lnot x_n)$ whose length is $2*|\phi_{n-1}|+|\lnot \phi_{n-1}|+1 (\verb|U|)+2(\land)+2(\lnot)$ which by inductive hypothesis is $2*2^{n-1}+|\lnot \phi_{n-1}|+5> 2^{n}$. 
 		\section{Computation Tree Logic}
 		\subsection*{Exercise 6.8}
 		\begin{figure}[H]
