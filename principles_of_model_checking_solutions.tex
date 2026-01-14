@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[11pt, a4paper, titlepage]{scrreprt}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{tikz-cd}
@@ -21,8 +21,13 @@
 \usetikzlibrary{automata,positioning}
 \title{Principles Of Model Checking Exercises Solutions}
 
+\date{}
+
 \newcommand{\cupdot}{\mathbin{\mathaccent\cdot\cup}}
-\author{Dario Bekic}
+\author{
+	Dario Bekic\textsuperscript{1} \\[.2cm] % The Name with superscript 1
+	\small \textsuperscript{1}\textit{University of Pisa} % The Institution
+}
 
 \let\next\FacNext
 \let\eventually\FacPos
@@ -55,11 +60,13 @@
 	
 	\maketitle
 	
-	\section{Introduction}
-	These are my solutions for the exercises of the book Principles Of Model Checking by Christel Baier and Joost-Pieter Katoen
-	\section{3 Linear Time Properties}
+	\newpage
 	
-	\subsection{Exercise 3.1}
+	\chapter*{Introduction}
+	These are my solutions for the exercises of the book Principles Of Model Checking by Christel Baier and Joost-Pieter Katoen
+	\chapter*{Linear Time Properties}
+	
+	\section*{Exercise 3.1}
 	This is like giving a regular grammar.
 	
 	\begin{align*}
@@ -69,14 +76,14 @@
 		&S''' \rightarrow aS'
 	\end{align*}
 	
-	\subsection*{Exercise 3.2}
+	\section*{Exercise 3.2}
 
 	\begin{enumerate}[label=\alph*)]
 		\item $f: TS \mapsto TS^*$ (set $TS$ of transitions systems with terminal states and $TS^*$ is the one without). $f(S, Act, \rightarrow, I, AP, L, F) = (S\sqcup \{s_f\}, Act, \rightarrow \cup \{ (t, \tau, s_f) | t \in F \}, I \setminus F, AP, L \cup \{(s_f, \emptyset)\})$ by viewing everything as a set.
 		\item Suppose $\sigma \in Traces(TS^*_1) \land \sigma \notin Traces(TS^*_2)$. Let $\pi_1$ be a $TS_1^*$ path such that $Trace(\pi_1)=\sigma$. Either $\exists q. \pi_q=s_f$ or not. Assume the first case, and let $j$ be the index of the first element in $\pi_1$ such that $\pi_1 \neq s_f$. The path fragment $\pi'_1=\pi_{1,1},...,\pi_{1,j}$  is a maximal path in $TS_1$ since $\pi_{1,j}$ is a terminal state by construction. By hypothesis there must exist a path $\pi'_2 \in TS_2$ such that $Trace(\pi'_1)=Trace(\pi'_2)$ thus also $\pi_2'$ must be a maximal initial finite fragment path i.e. must end in a terminal state of $TS_2$. Now we can extend the path $\pi_2'$ with infinite loops and since $s_{fin}$ i.e. the phantom state added to $TS_2^*$ has no atomic proposition its trace will be equal to that of $\pi_1$. Namely, $\sigma= Trace(\pi_1)=Trace(\pi'_1)=Trace(\pi'_2)=Trace(\pi_2)$, contradicting the claim that $\sigma \notin Traces(TS_2^*)$.
 	\end{enumerate}
 	
-	\subsection*{Exercise 3.3}
+	\section*{Exercise 3.3}
 	
 	\begin{algorithm}
 		\caption{BFS for Invariant Checking (shortest counterexample)}
@@ -117,7 +124,7 @@
 		\end{algorithmic}
 	\end{algorithm}
 	
-	\subsection*{Exercise 3.4}
+	\section*{Exercise 3.4}
 	
 	\begin{enumerate}[label=\alph*)]
 		\item $\implies$: pick a finite path fragment $\pi \in PathFragment_{fin}(TS)$ such that $Trace(\pi) \in Traces_{fin}(TS) \land Trace(\pi) \notin Traces_{fin}(TS')$. Call $\sigma$ the size of $\pi$. I can extend $\pi$ to a maximal path $\pi'$ such that $Trace(\pi') \in Traces(TS) \land Trace(\pi') \in Traces(TS')$. By $Trace(\pi') \in Traces(TS')$ there must exist a path $\rho' \in Paths(TS')$ such that $Trace(\rho') = Trace(\pi')$. Thus, the prefix of length $\sigma$ of $\rho'$ is a finite path fragment $\rho$ in $TS'$ such that $Trace(\rho)=Trace(\pi)$, contradicting the hypothesis $Traces(\pi) \notin Traces_{fin}(TS')$. The same can be argued by swapping $TS$ and $TS'$ roles, completing the proof.\\
@@ -131,7 +138,7 @@
 			& \{x\}                                             & \{x\} \arrow[l] & \{x\} \arrow[l]                                                            & \{x\} \arrow[l] & \{x\} \arrow[l] & ....
 		\end{tikzcd}
 	\end{enumerate}
-	\subsection*{Exercise 3.5}
+	\section*{Exercise 3.5}
 	\begin{enumerate}[label=\alph*)]
 		\item $\verb|false| \triangleq \emptyset$
 		\item $\verb|initEqualZero| \triangleq \{A_0A_1,... \in (2^{AP})^\omega | \exists i \in \mathbb{N}. A_i = \{x=0\} \land \forall j < i. A_j = \emptyset \}$
@@ -142,7 +149,7 @@
 		\item $\verb|initEqualZero| \triangleq \{A_0A_1,... \in (2^{AP})^\omega | (A_i = \{x=0\} \land A_{j} = \{x > 0\} \land \text{i even, j odd}) \lor (A_i = \{x=0\} \land A_{j} = \{x > 0\} \land \text{i odd, j even})\}$
 		\item $\verb|true| \triangleq (2^{AP})^\omega$
 	\end{enumerate}
-	\subsection*{Exercise 3.6}
+	\section*{Exercise 3.6}
 	\begin{enumerate}[label=\alph*)]
 		\item Invariant: $\verb|Never| \triangleq \{A_0A_1,... \in (2^{AP})^\omega | A \notin A_i \forall i\}$
 		\item Safety: $\verb|Once| \triangleq \{A_0A_1,... \in (2^{AP})^\omega | \exists i. A \in A_i \land \forall j. (j < i \lor j > i) \land A \notin A_j \}$
@@ -181,7 +188,7 @@
 		\item There is only $P4$: $\phi \triangleq \lnot x \lor r_1$
 		\end{enumerate}
 	\end{enumerate}
-	\subsection*{Exercise 3.8}
+	\section*{Exercise 3.8}
 	$\implies$: this direction holds and directly comes from the definition of closure of a property: $closure(P) = \{\alpha \in (2^{AP})^\omega | pref(\alpha) \subseteq pref(P) = \{\alpha \in (2^{AP})^\omega | pref(\alpha) \subseteq pref(P') = closure(P')\}$.\\
 	$\impliedby$: suppose $closure(P) = closure(P')$ but $\alpha \in pref(P) \land \alpha \notin pref(P')$. Since $\alpha \in pref(P)$ there exists $\sigma \in P$ such that $\alpha$ is a prefix of $\sigma$. By definition of closure, $\sigma \in closure(P)$ which implies $\sigma \in closure(P')$ by hypothesis. But $\sigma \in closure(P') \iff pref(\sigma) \subseteq pref(P')$ by definition of closure, and thus we have $\alpha \in pref(P')$.
 	\subsection*{Exercise 3.9}
@@ -192,7 +199,7 @@
 		Then if $\sigma \in \Phi \cap \{\beta \in (2^{AP})^{\omega} | \pi \in pref(\beta)\}$ it means $pref(\sigma) \subseteq pref(Traces(TS))$ which means $\pi \in pref(Traces(TS))$.
 		\item A word $\xi$ is in $\Phi$ if and only if $pref(\xi) \subseteq pref(Traces(TS))$. Any path $\rho$ in TS has $Trace(\rho) \in Traces(TS)$ thus $pref(Trace(\rho)) \subseteq pref(Traces(TS))$.  
 	\end{enumerate}
-	\subsection*{Exercise 3.10}
+	\section*{Exercise 3.10}
 	Suppose $\phi \in pref(closure(P))$ then $\exists \rho \in closure(P)$ such that a finite prefix of $\rho$ is $\phi$. But any element in $closure(P)$ is just a word whose prefixes are elements of $pref(P)$ thus any prefix of $\rho$ is a an element of $pref(P)$, even $\phi$, thus $\phi \in pref(P)$.
 	\subsection*{Exercise 3.11}
 	\begin{enumerate}[label=\alph*)]
@@ -206,12 +213,12 @@
 	\item $\verb|UNION_LIVE| \triangleq P \cup P'$ is a liveness property if $P, P'$ are liveness properties. This is trivially arguable informally: if i can extend any finite prefix to a trace in $w_p \in P$ or to a trace $w'_{p} \in P'$ then i can extend any prefix to a trace in $P \cup P'$ (just pick either $w_p$ or $w_p'$).
 	\item $\verb|INTER_LIVE| \triangleq P \cap P'$ is not necessarily a liveness property. To see a concrete counter-example consider $P\triangleq \{\text{ from one point there will be only 1s}\}$ and $P' \triangleq \{\text{ from one point there will be only 0s}\}$. Their intersection is empty, and the empty set is not a liveness property.		
 	\end{enumerate}
-	\subsection*{Exercise 3.12}
+	\section*{Exercise 3.12}
 	\begin{enumerate}[label=\arabic*.]
 		\item $closure(P) \subseteq P_{safe}$. Assume there exists $\alpha \in closure(P)$ such that $\alpha \notin P_{safe}$. Since $\alpha \in closure(P)$, for any finite prefix $\beta$ of $\alpha$, $\beta \in pref(\alpha) \implies \beta \in pref(P)$. So pick any prefix $\beta$ of $\alpha$, since $P_{safe}$ is a safety property we have $P_{safe} \cap \{\gamma | \beta \in pref(\gamma)\}=\emptyset$. But we also proved $\beta \in pref(P)$, and since $P$ contains a subset of $P_{safe}$ it means $\exists \lambda \in P_{safe}. \beta \in pref(\lambda)$. But this would imply $\lambda \in P_{safe} \cap \{\gamma | \beta \in pref(\gamma)\} \neq \emptyset$.
 	\item $P_{live} \subseteq \underbrace{P \cup ((2^{AP})^\omega \setminus closure(P))}_{\verb|EXPR|}$. Suppose $w \in P_{live}$ but not in $\verb|EXPR|$. This can only happen if $w \notin P$ which implies $w \notin P_{safe}$. We wish to prove $w \in \verb|EXPR|$ if $w \notin P_{safe}$. This is equal to proving $w \notin P_{safe} \implies w \notin closure(P)$ by definition of $\verb|EXPR|$. We can prove the contrapositive: $w \in closure(P) \implies w \in P_{safe}$ which we proved in the first point.
 	\end{enumerate}
-	\subsection*{Exercise 3.13}
+	\section*{Exercise 3.13}
 	One can of course use the Decomposition theorem, but there is a way of giving explicitly the two properties by using intuition.
 	
 	One would of course first start from characterizing $P$: maybe the exercise is tricky and $P$ is a safe or liveness property. Proving one such result would let us quickly end the exercise.
@@ -232,7 +239,7 @@
 	P_{live} \triangleq \{w_1,w_2,... | \overset{\infty}{\exists} j. b \in w_j\}
 	$$
 	The correctness is immediate.
-	\subsection*{Exercise 3.14}
+	\section*{Exercise 3.14}
 	First, let's put here the transition graphs.
 	Consider the TS for Peterson's algorithm in \autoref{fig:peterson-transition-system} and for the Semaphore-based mutual exclusion in \autoref{fig:semaphore-transition-system}.
 	Note that we have $req_1, req_2$ labels even though they are not in AP just for ease of read.
@@ -245,14 +252,14 @@
 	$$
 	
 	is in $Traces(TS_{sem})$ but not in $Traces(TS_{pet})$.
-	\subsection*{Exercise 3.15}
+	\section*{Exercise 3.15}
 	\begin{enumerate}[label=(\alph*)]
 		\item Regarding satisfaction of $E'$: without \textit{unconditional} fairness assumptions it is a matter of verifying if there exists a path which contains $\{\{a\}, \{a,b\}, \emptyset\}$ and this is true $s_1 \rightarrow s_2 \rightarrow s_3 \rightarrow s_1$, thus this property is never satisfied.
 		For $B_1$ only $E_a$ because we may loop on $s_1 \rightarrow s_2 \rightarrow s_1$. For $B_2$ both $E_a$ and $E_b$ as we need to exit the loop we mentioned because $s_1 \rightarrow s_3$ is infinitely enabled.
 		For $B_3$ only $E_b$, because of the loops $s_1 \rightarrow s_2 \rightarrow s_1$ and $s_1 \rightarrow s_2 \rightarrow s_4 \rightarrow s_1$ we always pass by $s_1$ which has enabled the $\beta$ transition to $s_3$.
 		\item The same reasoning for $E'$ applies. Now, recall that weaker assumptions restrict \textit{the same} or more traces, thus we do not check again those we proved are not satisfied by strong assumptions. For example, $B_1$ now looses $E_a$ as $\alpha$-transitions from $s_1$ are not continuously enabled, as we can loop on $s_1 \rightarrow s_3 \rightarrow s_1$. The same goes for $B_3$. And we also loose both $E_a, E_b$ for $B_2$ as we can loop on $s_1 \rightarrow s_2 \rightarrow s_1$ continuously \textit{alternating} between having $\alpha$ and $\beta$ transitions.
 	\end{enumerate}
-	\subsection*{Exercise 3.16}
+	\section*{Exercise 3.16}
 	\begin{enumerate}[label=(\alph*)]
 		\item 
 		\begin{enumerate}[label=\arabic*.]
@@ -320,7 +327,7 @@
 		\caption{Exercise 3.16. point (e)}
 		\end{figure}
 	\end{enumerate}
-	\subsection*{Exercise 3.17}
+	\section*{Exercise 3.17}
 	It is enough to count all the cycles and see if one of those two non-mutually exclusive (but sufficient) conditions hold: $i)$ to access the cycle by using any path we encounter \textit{a} or $ii)$ in at least one state of the cycle we have available either a $\alpha$ or $\beta$ as outgoing transitions to states where \textit{a} holds (or where we have proved that it eventually holds).
 	\\
 	(Some) cycles are:
@@ -329,13 +336,13 @@
 		\item $s_2\rightarrow s_3 \rightarrow s_2$: we have infinitely many times $\beta$ transition available which sends us to $s_1$, thus by criterion $ii)$ and point 1. we conclude. 
 		\item $s_3 \rightarrow s_4 \rightarrow s_5 \rightarrow s_4 \rightarrow s_6 \rightarrow s_3$ both criterion do not hold, thus the property is not satisfied.
 	\end{enumerate}
-	\subsection*{Exercise 3.18}
+	\section*{Exercise 3.18}
 	\begin{enumerate}[label=(\alph*)]
 		\item It is not realizable as there is no fair path starting from $s_1$ which is reachable with an $\alpha$ transition from $s_0$ because of the unconditional assumption $\{\alpha\}$.
 		\item By having now the unconditional assumption $\{\delta, \alpha\}$ the loop $s_1 \rightarrow s_4 \rightarrow s_1$ is a fair path. Thus, $\mathcal{F}_2$ is realizable.
 		\item This is too realizable. The loop $s_1 \rightarrow s_4 \rightarrow s_1$ will enable infinitely many times $\beta$ and by strong fairness $\{\alpha, \beta\}$ we will be forced to take it infinitely many times thus satisfying the unconditional assumption $\{\beta \}$.
 	\end{enumerate}
-	\subsection*{Exercise 3.19}
+	\section*{Exercise 3.19}
 	\begin{enumerate}[label=(\alph*)]
 		\item \begin{enumerate}[label=(\roman*)]
 			\item
@@ -402,10 +409,10 @@
 		
 		Now we are not forced to move with $\eta$ even if we pass through $s_3$ an infinite number of times. So say such $n$ existed, we can always loop back to $s_2$ and then move to $s_3$(as we can pass through to $s_3$ an infinite number of times).
 	\end{enumerate}
-	\subsection*{Exercise 3.20}
+	\section*{Exercise 3.20}
 	\newpage
-	\section{4 Regular Properties}
-	\subsection*{Exercise 4.1}
+	\chapter*{Regular Properties}
+	\section*{Exercise 4.1}
 	\begin{enumerate}[label=(\alph*)]
 		\item yes, see \autoref{fig:ex4.1:a}
 		\begin{figure}[H]
@@ -465,7 +472,7 @@
 		\label{fig:ex4.1:d}
 	\end{figure}
 	\end{enumerate}
-	\subsection*{Exercise 4.2}
+	\section*{Exercise 4.2}
 	\begin{enumerate}
 		\item Let $n=3$ for simplicity.
 		\begin{figure}[H]
@@ -510,7 +517,7 @@
 			\label{fig:ex4.2:b}
 		\end{figure}
 	\end{enumerate}
-	\subsection*{Exercise 4.3}
+	\section*{Exercise 4.3}
 	\begin{enumerate}[label=(\alph*)]
 		\item \begin{enumerate}[label=(\roman*)]
 			\item See \autoref{fig:ex4.3:a:i}
@@ -616,14 +623,14 @@
 			\end{figure}
 		\end{enumerate}
 	\end{enumerate}
-	\subsection*{Exercise 4.4}
+	\section*{Exercise 4.4}
 	\begin{enumerate}[label=(\alph*)]
 		\item It is true. Take the NFA $N=(Q, \Sigma, \delta, Q_0, F)$ corresponding to $\mathcal{L}$, then by hypothesis this NFA accepts the minimal bad prefixes of $P_{safe}$ and some other bad prefixes. It is enough to remove any outgoing edge from end states in $N$, obtaining the NFA $N'$, to get an NFA accepting the minimal bad prefixes of $P_{safe}$. If $w$($|w|=n$) is a minimal bad prefix then it is accepted by $N$ by construction, which means there exists a run $\pi$ such that $\exists i. \pi_i \in F$ and $\pi_1 \rightarrow^{w_1} \pi_2 \rightarrow^{w_2} ... \rightarrow^{w_n} \pi_i$.
 		Then it is obvious that there cannot be another $j$ such that $j<i$ and $\pi_j\in F$ because this would mean $w'=w_1...w_j$ is a bad prefix (since $L \subseteq BadPref(P_{safe})$) of a minimal bad prefix $w$.
 		Then we know that $N'$ can imitate this same path and thus accept any minimal bad prefix of $P_{safe}$. For the other direction, namely that $N'$ accepts only the (minimal) bad prefixes: since $N'$ is $N$ after we remove some edges it cannot expand the language accepted, thus $N'$ accepts only Bad Prefixes of $L_{safe}$ and because no end state has outgoing transition it accepts only the minimal ones.
 		\item False. Consider the regular safety property $\emptyset$, then $MinBadPref(P_{safe})=\emptyset$ and $BadPref(P_{safe})=(2^{\{0,1\}})^{\omega}$. Now consider $L=\{\{0\}^n\{1\}^n+1| \forall n \ge 0\}$ which is clearly not regular.
 	\end{enumerate}
-	\subsection*{Exercise 4.5}
+	\section*{Exercise 4.5}
 	First, some considerations on the NFA: it is described by the RE: $$((bc)^*a.(a^*.(b+ab).a^*.(b+ab))^*.c)^*.(bc)^*a.c$$.
 	One possible way to describe the bad prefixes represented by this NFA could be: $c \in A_i \implies A_{i-1}= \{a\}$.
 	\begin{figure}[H]
@@ -654,7 +661,7 @@
 		\caption{Exercise 4.5, the reachable fragment of the product $TS \otimes A$}
 		\label{fig:ex4.5}
 	\end{figure}
-	\subsection*{Exercise 4.6}
+	\section*{Exercise 4.6}
 	I read this property as "Always, if $a$ becomes valid and $b \land \lnot c$ holds in one of the states \textit{before} then in every state \textit{after} neither $a$ nor $b$ hold until a $c$ holds". I consider the set $AP=\{a,b, c\}$.
 	\begin{enumerate}[label=(\alph*)]
 		\item See \autoref{fig:ex4.1:a}. 
@@ -709,7 +716,7 @@
 			\label{fig:ex4.6:b}
 		\end{figure}
 	\end{enumerate}
-	\subsection*{Exercise 4.7}
+	\section*{Exercise 4.7}
 	\begin{enumerate}[label=(\alph*)]
 		\item True. $$\underbrace{L(E_1.F^\omega + E_2.F^\omega)}_{L1} = \underbrace{L(E_1).L(F)^\omega}_{L2} \cup \underbrace{L(E_2).L(F)^\omega}_{L3} $$
 		so any word $w \in L1$ is either a word in $L2$ or $L3$ (non exclusive or). 
@@ -727,7 +734,7 @@
 		For the other direction, namely that $w \in L2 \implies w \in L1$ we note that $L(F)\subseteq L(F.F^*) \implies L(F)^\omega \subseteq L(F.F^*)^\omega$.
 		\item False. Take $\Sigma=\{a,b\}$ as an alphabet, $E=a, F=b$. Then $a.(a.b)^\omega \in L(E^*.F)^\omega$ but there is no word with infinite $a$s in $E^*.F^\omega$ as the $\omega$ operator is applied only to the language $\{b\}$.
 	\end{enumerate}
-	\subsection*{Exercise 4.8}
+	\section*{Exercise 4.8}
 	We need to proceed by cases on the form of $G$, let $F$ be an operator which takes in input a generalized $\omega$-regular expression and returns one equivalent of the form $E+E_1.F_1^\omega+\dots E_n.F^\omega_n$:
 	\begin{enumerate}
 		\item $F(\emptyset)=\emptyset$
@@ -741,7 +748,7 @@
 		\item $F(G^*)$: by inductive hypothesis $F(G)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$ thus $$F(G^*)=E^*+E^*.E_1.F^\omega_1+\dots E^*.E_n.F_n^\omega$$
 		\item $F(G^\omega)$: by inductive hypothesis $F(G)=E+E_1.F^\omega_1+\dots E_n.F_n^\omega$. Following the same reasoning as for the Kleene closure, $F(G^\omega)=(E \setminus \epsilon)^\omega$.
 	\end{enumerate}
-	\subsection*{Exercise 4.9}
+	\section*{Exercise 4.9}
 	\begin{figure}[H]
 		\centering
 		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
@@ -764,7 +771,7 @@
 		\caption{Exercise 4.9. NBA for the property "infinitely many A, and between two A there is an odd number of B"}
 		\label{fig:ex4.9}
 	\end{figure}
-	\subsection*{Exercise 4.10}
+	\section*{Exercise 4.10}
 	\begin{enumerate}[label=(\alph*)]
 		\item See \autoref{fig:ex4.10:a} for a visual description of the NBA. An $\omega$-regular expression is: $(B+C)^*.(A.((B.B)^*.B+(C.C)^*.C))^\omega$ 
 		\begin{figure} \centering
@@ -918,7 +925,7 @@
 	 		\label{fig:ex4.10:d}
 	 	\end{figure}
 	\end{enumerate}
-	\subsection*{Exercise 4.11}
+	\section*{Exercise 4.11}
 	The Automata has two initial states and two final states and it is depicted in \autoref{fig:ex4.11}.
 	\begin{figure}[H] \centering
 		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
@@ -948,9 +955,9 @@
 		\caption{Exercise 4.11 NBA for the $\omega$-regular expression $(AB+C)^*((AA+B)C)^\omega+(A^*C)^\omega$}
 		\label{fig:ex4.11}
 	\end{figure}
-	\subsection*{Exercise 4.12}
+	\section*{Exercise 4.12}
 	For $\mathcal{A}_1: (A.(A+B+C)^*.A+C.(A+B+C)^*.C)^\omega$, for $\mathcal{A}_2: (B+C)^*.A.(B.C)^\omega + (B+C)^*.A.(B.C)^*.B.A^\omega + (B+C)^*.B.A^\omega$
-	\subsection*{Exercise 4.13}
+	\section*{Exercise 4.13}
 	First we apply $\omega$ operator to $A_2$. Intuitively, this means that from each end state we can operator as any initial state but keeping in mind that this holds only if the end state has no outgoing edges. Since $q_2$ has outgoing edges we need to duplicate him into a new node $q_5$ which takes all its outgoing edges, see \autoref{fig:ex4.13:power}.
 	Then to make the concatenation NBA, we need to make the end state of $A_1$ act as any initial state of $A_2$: in this case we just need to give the outgoing transitions of $q_0$ to $p_0$.
 	\begin{figure}[H] \centering
@@ -981,10 +988,10 @@
 		\caption{Exercise 4.13 NBA for $A^\omega_2$}
 		\label{fig:ex4.13:power}
 	\end{figure}
-	\subsection*{Exercise 4.14}
+	\section*{Exercise 4.14}
 	This property means "infinitely often $a \land b$ but at least once $a \land \lnot b$. Let $W=\{a\}+\{b\}+\{ab\}+\emptyset$.
 	So $W^*.\{a\}.(W^*.\{a,b\})^\omega$.
-	\subsection*{Exercise 4.15}
+	\section*{Exercise 4.15}
 	\begin{figure}[H] \centering
 		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
 			\node[state, initial, accepting] (q_0) {$q_0$};
@@ -1002,9 +1009,9 @@
 		\caption{Exercise 4.15 NBA's}
 		\label{fig:ex4.15}
 	\end{figure}
-	\subsection*{Exercise 4.16}
+	\section*{Exercise 4.16}
 	$L_\omega(A_1)=\emptyset, L_\omega(A_2)=A^\omega$, however the powerset construction yields in both cases an automata with language accepted $A^\omega$.
-	\subsection*{Exercise 4.17}
+	\section*{Exercise 4.17}
 	\begin{enumerate}[label=(\alph*)]
 		\item $(2^{AP}.a_1.(2^{AP \setminus \{a_1\}})^*.a_2.(2^{AP \setminus \{a_2\}})^*.a_3\dots a_n)^\omega$ when i write $2^{AP}$ i mean the  regular language of this finite set, i.e. the $+$ of each of its members.
 		\item Suppose there was one such automata $A'$. One word accepted by the language is $w = (a_1.a_2.a_3\dots a_n)^\omega$ and so it must be accepted also by the automata $A'$. 
@@ -1017,19 +1024,19 @@
 			\item $i > k$: similar to the previous case.
 		\end{itemize}
 	\end{enumerate}
-	\subsection*{Exercise 4.18}
+	\section*{Exercise 4.18}
 	Pick any NFA such that its end states do not have outgoing edges, then the language accepted by the NBA is empty.
-	\subsection*{Exercise 4.19}
+	\section*{Exercise 4.19}
 	TODO
-	\subsection*{Exercise 4.20}
+	\section*{Exercise 4.20}
 	The NBA has to contain a strongly connected component $S_1$ where a final state of the NBA is reachable and for each state in this SCC the path gives a trace which is a string in $(AB+BA)^\omega$. It is not possible for $S_1$ to allow for transitions of the like $s \rightarrow^A s' \rightarrow^A$ as it would enable us to accept strings of the like "there are infinitely many BBs or AAs".
 	Now from some state $q$ we can consume $A$ and then we should be able to access $S_1$ (to express $AB$) but also to consume another $A$ which cannot go in $S_1$ (because in $S_1$ we cannot express the language $(A+B)^\omega$). 
 	Thus, $q$ has to have two transitions labeled $A$, hence it is not a DBA.
-	\subsection*{Exercise 4.21}
+	\section*{Exercise 4.21}
 	TODO 
-	\subsection*{Exercise 4.22}
+	\section*{Exercise 4.22}
 	TODO
-	\subsection*{Exercise 4.23}
+	\section*{Exercise 4.23}
 Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 = (Q', \Sigma, \delta', Q'_0, F')$ I claim that the DBA $A_{1 \cup 2} = (Q \times Q', \Sigma, \delta^*, Q_0 \times Q'_0, F \times Q' \cup Q \cup F')$ recognizes $L_{\omega}(A_{1 \cup 2}) = L_{\omega}(A_1) \cup L_{\omega}(A_2)$ where $\delta^*$ is defined as:
 	$$
 	\delta^*(\langle q, s \rangle, a) = \langle \delta(q, a), \delta'(s, a)\rangle
@@ -1037,7 +1044,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 	Let $w \in L_{\omega}(A_1) \cup L_{\omega}(A_2)$, then assume $w \in L_{\omega}(A_1)$, the proof does not care whether $w \in L_{\omega}(A_2)$ and it is totally symmetric if we assumed $w \in L_{\omega}(A_2)$ instead.
 	We have $w \in L_{\omega}(A_1) \implies \exists \pi. \pi \in Paths(A_1). Trace(\pi)=w$.
 	Take the path $\pi'$ in $A_{1 \cup 2}$ such that $(a, b) = \pi'_i \overset{x}{\rightarrow} \pi'_{i+1} = (c, d)$ if and only if $a = \pi_i \land b = \delta'(\verb|take_right|(\pi'_{i-1}, x))$. Now it is evident that $\verb|take_left|(\pi'_i)=\pi_i$ and since $\pi_i$ is an accepting path there must exists infinitely many indexes $j. \pi_j \in F$, which implies that those same indexes in $\pi'$ are final as $F \times Q'$ is  subset of the final states of $A_{1 \cup 2}$. The observation on the size of the state space is immediate.
-	\subsection*{Exercise 4.24}
+	\section*{Exercise 4.24}
 	The NBA is shown in \autoref{fig:ex4.24}
 		\begin{figure}[H] \centering
 		\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] 
@@ -1064,14 +1071,14 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\caption{Exercise 4.24 NBA's}
 		\label{fig:ex4.24}
 	\end{figure}
-	\subsection*{Exercise 4.25}
+	\section*{Exercise 4.25}
 	TODO
-	\subsection*{Exercise 4.26}
+	\section*{Exercise 4.26}
 	\begin{enumerate}[label=(\alph*)]
 		\item $L=(BB+C(AA)^+C)^\omega + (BB+C(AA)^+C)^*C.(AA)^\omega$
 		\item The GNBA $\mathcal{A}=(Q,\Sigma, \delta, Q_0, \mathcal{F})$ accepts the same language as the Muller Automaton $(Q, \Sigma, \delta, Q_0, \mathcal{F}')$ where $\mathcal{F}'=\{ A | \forall f \in \mathcal{F} \exists a. \in F \land a \in A \}$.
 	\end{enumerate}
-	\subsection*{Exercise 4.27}
+	\section*{Exercise 4.27}
 	\begin{enumerate}[label=(\alph*)]
 		\item You can view the NBA for $P_{live}$ in \autoref{fig:ex4.27} and the one for its complement in \autoref{fig:ex4.27:complement}.
 		\begin{figure}[H] 
@@ -1149,8 +1156,9 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\end{figure}
 		\end{enumerate}
 	\end{enumerate}
-	\section{Linear Time Logic}
-	\subsection*{Exercise 5.1}
+	\chapter*{Linear Time Logic}
+	
+	\section*{Exercise 5.1}
 	Let $S=\{s_1, s_2, s_3, s_4\}$.
 	\begin{enumerate}[label=(\arabic*)]
 		\item \FacNext a is satisfied by $S\setminus s_4$
@@ -1160,7 +1168,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\item It is satisfied by $S$
 		\item Any state satisfying $\FacPos b$ also satisfies $\FacPos (a U b)$ and all the states satisfy $\FacPos b$
 	\end{enumerate}
-	\subsection*{Exercise 5.2}
+	\section*{Exercise 5.2}
 	\begin{itemize}
 		\item $\lnot TS \models \phi_1$: there is no state which satisfies $\FacNec c$.
 		\item $TS \models \phi_2$: the only way not to satisfy this formula would be to loop through states which do not have $c$ in their label set. The only two states which do not have $c$ are $s_1$ (which is not reachable apart from when the path starts from it) and $s_4$ which, however, has no outgoing edges to $\{s_1, s_4\}$
@@ -1169,7 +1177,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\item $TS \models \phi_5$ because all paths in the SCC $S' = S  \setminus s_1$ satisfy $\FacNec b \lor c$ and for a path starting from $s_1$ the only two outgoing edges are into $S'$.
 		\item $TS \models \phi_6$ by the same reasoning as for $\phi_5$.
 	\end{itemize}
-	\subsection*{Exercise 5.3}
+	\section*{Exercise 5.3}
 	\begin{enumerate}[label=(\alph*)]
 	\item $\always (y\implies \next \lnot y)$
 	\item $\always (x \implies \next \next y \lor \next y \lor y)$
@@ -1177,7 +1185,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 	\item $\always \eventually r_1$
 	\end{enumerate}
 	
-	\subsection*{Exercise 5.4}
+	\section*{Exercise 5.4}
 	Let us introduce the following definitions: PR = Peter.Request, PU = Peter.Use, PL = Peter.Release and with BR, BU, BL the correspondent for Betsy. 
 	\begin{enumerate}[label=(\alph*)]
 		\item $\always (\lnot PU \lor \lnot BU)$
@@ -1186,7 +1194,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\item $\always (\eventually PR \land \eventually BR)$
 		\item $\always ((PU \land \next (\lnot PU \; \mathcal{U}\; BU)) \lor (BU \land \next (\lnot BU  \; \mathcal{U}\; PU))) \land (a)$
 	\end{enumerate}
-	\subsection*{Exercise 5.5}
+	\section*{Exercise 5.5}
 	Let $E_i$ denote the atomic proposition "the elevator is at the i-th floor", $O_i$ denote the atomic proposition "the i-th floor's door is open", $R_i$ denote "the elevator is requested at the i-th floor".
 	\begin{enumerate}[label=(\alph*)]
 		\item $(\bigvee_{i=0})^{N-1}E_i \land O_i$
@@ -1194,7 +1202,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\item $\always \eventually E_0$
 		\item $\always ((\lnot \bigwedge_{i=0}^{N-2} (\lnot E_i) \; \mathcal{U} \; E_{N-1}) \land \lnot R_{N-1})$
 	\end{enumerate}
-	\subsection*{Exercise 5.6}
+	\section*{Exercise 5.6}
 	 Consider $\phi=a$ and $\psi=b$.
 	\begin{enumerate}[label=(\alph*)]
 		\item They are not equivalent. $\{a\}\emptyset\{b\}^\omega$ satisfies the formula on the left but not the one on the right.
@@ -1228,16 +1236,47 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\item $\impliedby$: assume $S \models (\phi_1 \; \mathcal{U} \; \phi_2)$ then there $\exists k. S_k \models \phi_2 \land \forall i < k. S_i \models \phi_1 \land \lnot \phi_2$. We need to prove $\forall i < k. S_i \models \phi_1 \; \mathcal{U} \; \phi_2$ i.e. that there exists $t\ge i$ such that $S_t \models \phi_2$ and $\forall i \le j < t. S_j \models \phi_1$. Take $t=k$.
 		\end{itemize}
 		\end{enumerate}
-		\subsection*{Exercise 5.7}
+		\section*{Exercise 5.7}
 		\begin{enumerate}[label=(\alph*)]
 			\item $\phi \;\text{N}\; \psi \equiv \lnot \psi \; \mathcal{W} \; (\phi \land \psi)$
 			\item $\phi \;\text{W}\; \psi \equiv \phi \; \mathcal{W} \; \lnot \psi$
 			\item $\phi \;\text{B}\; \psi \equiv (\eventually \psi \rightarrow (\phi \; \mathcal{U} \; \psi )$ if the \textit{before} is to be intended as non-strictly before otherwise if $\phi$ needs to be satisfied in a moment strictly before I propose $\eventually \psi \rightarrow (\phi \; \mathcal{U} \; (\psi \land \lnot \phi ))$
 		\end{enumerate}
-		\subsection*{Exercise 5.10}
+		\section*{Exercise 5.9}
+		\begin{enumerate}[label=(\alph*)]
+			\item 
+			\begin{align*}
+				&\lnot (\lnot \phi \mathbb{U} \lnot \psi)\equiv\\
+				& (\lnot \phi \land \psi) \mathbb{U} (\phi \land \psi) \lor \always (\lnot \phi \land \psi)\equiv \\
+				&(\psi \land \phi) \lor (\lnot \phi \land \psi \land \next(U)) \lor (\lnot \phi \land \psi \land \next \always (\lnot \phi \land \psi))\equiv \\
+				& \psi \land (\phi \lor (\lnot \phi \land \next(U))) \lor (\psi \land (\lnot \phi \land \next \always(\lnot \phi \land \psi))) \equiv\\
+				& \psi \land (\phi \lor (\lnot \phi \land \next(U)) \lor (\lnot \phi \land  \next \always(\lnot \phi \land \psi))) \equiv\\
+				& \psi \land (\phi \lor (\lnot \phi \land( \next(U) \lor  \next \always))) \\ 
+				& \psi \land (\phi \lor (\next (\phi R \psi)))
+				\end{align*}
+				\item Just take the first equivalence of point a.
+		\end{enumerate}
+		\section*{Exercise 5.10}
 		Assume $n+1$ atomic propositions: $x_0, \dots, x_n$ then let $\phi_n \eqdef \lnot (\phi_{n-1} \verb|U| x_n)$ and $\phi_0 = x_0$. Then we get $|\phi_0|=1=2^0$. And for the recursive case we have $|\phi_n|=((\phi_{n-1} \land \lnot x_n) \verb|U| (\lnot \phi_{n-1} \land \lnot x_n)) \lor \always (\phi_{n-1} \land \lnot x_n)$ whose length is $2*|\phi_{n-1}|+|\lnot \phi_{n-1}|+1 (\verb|U|)+2(\land)+2(\lnot)$ which by inductive hypothesis is $2*2^{n-1}+|\lnot \phi_{n-1}|+5> 2^{n}$. 
-		\section{Computation Tree Logic}
-		\subsection*{Exercise 6.8}
+		\section*{Exercise 5.17}
+		\begin{enumerate}[label=(\alph*)]
+			\item 
+			\begin{align*}
+				& \psi = \always (a \iff \next (\lnot a)) \equiv\\
+				& \always ((\lnot a \land \next a) \lor (a \land \next \lnot a)) \equiv\\
+				& \lnot (true \mathbb{U} \lnot (\lnot a \land \next a) \land \lnot (a \land \next \lnot a)) = \phi
+			\end{align*}
+			\item
+			\begin{align*}
+				&S_1=\{a, \next \lnot a, a \land \next \lnot a, \lnot (\lnot a \land \next a), \lnot U\}\\
+				&S_2=\{a, \next a, \lnot (a \land \next \lnot a), \lnot (\lnot a \land \next a), U \}\\
+				&S_3=\{a, \next \lnot a, a \land \next \lnot a, \lnot (\lnot a \land \next a), U\}\\
+				&S_4=\{\lnot a, \next \lnot a, \lnot(a \land \next \lnot a),\lnot (\lnot a \land \next a), U \}\\
+				&S_5=\{\lnot a, \next \}
+			\end{align*}
+		\end{enumerate}
+		\chapter*{Computation Tree Logic}
+		\section*{Exercise 6.8}
 		\begin{figure}[H]
 			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
 				\node[state,initial, fill=green] (q_0)   {$q_0$}; 
@@ -1270,7 +1309,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\label{fig:ex6.8}
 		\end{figure}
 		The two transition systems are trace equivalent but the one on the left does not satisfy the CTL formula $\forall \next \exists \next \textit{red}$
-		\subsection*{Exercise 6.13}
+		\section*{Exercise 6.13}
 		The implication is false, as removing paths in $TS'$ may invalidate state formulas previously true in $TS$. Suppose $\Phi=\textit{green}$ and $\Psi=\exists \next \textit{red}$. Then removing the transition from $q_1$ to $q_2$ makes $q_1$ not satisfy anymore $\Psi$ and as a consequence no reachable state satisfies $\exists \next \textit{red}$.
 		\begin{figure}[H]
 			\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
@@ -1299,7 +1338,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 				
 		The other direction is true: suppose there is a path $\pi$ that leads in \textit{TS'} to a state $\gamma$ where $\Psi$ holds, then, all the states preceding $\gamma$ in $\pi$ satisfy $\Phi \land \lnot \Psi$ because they have outgoing transitions (among which the ones we use to arrive at $\gamma$). This implies $\pi$ satisfies $\Phi U \Psi$ and since $\pi$ is a path of \textit{TS'} it also a path in \textit{TS}.
 	
-	\subsection*{Exercise 6.15}
+	\section*{Exercise 6.15}
 	
 	\begin{enumerate}[label=(\alph*)]
 		\item The LTL formula $\Phi_2 = \eventually (a \land \next a)$ is not equivalent to $\Phi_1$. Consider the transition system in \ref{fig:ex6.15:a}, which satisfies $\Phi_1$ and not $\Phi_2$ (because the path $q_0 (q_2)^\omega$ does not satisfy it).
@@ -1336,7 +1375,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\end{figure}
 	\end{enumerate}
 	\newpage
-	\subsection*{Exercise 6.17}
+	\section*{Exercise 6.17}
 	See the pseudo code here \ref{fig:ex6.17}
 		\begin{algorithm}
 			\caption{Computing $Sat(\forall(\Phi \,\mathsf{U}\, \Psi))$}
@@ -1366,7 +1405,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 				\EndProcedure
 			\end{algorithmic}
 		\end{algorithm}
-	\subsection*{Exercise 6.18}
+	\section*{Exercise 6.18}
 	\begin{enumerate}[label=(\alph*)]
 		\item We need to prove that for any state $x \in S$, $x \in Sat(\exists (\Phi W \Psi)) \iff x \in T^*$ where $T^*$ is the greatest subset of $S$ such that it satisfies the recurrence:
 		$$
@@ -1392,7 +1431,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\end{itemize}
 	\end{enumerate}
 	The other point is similar.
-	\subsection*{Exercise 6.20}
+	\section*{Exercise 6.20}
 	For $\exists (\Phi R \Psi) = \lnot \forall ((\lnot \Phi) U (\lnot \Psi))$:
 	$$
 	\exists \Phi R \Psi \equiv \exists ((\lnot \Phi \land \Psi) U (\Phi \land \Psi)) \lor \exists (\always (\Psi \land \lnot \Phi)) 
@@ -1402,7 +1441,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 	\exists \Phi R \Psi \equiv ((\lnot \Phi \land \Psi) \land \exists \next \exists \Phi R \Psi) \lor (\Phi \land \Psi) \equiv \Psi \land (\Phi \lor (\exists \next \exists \Phi R \Psi)).
 	$$
 	for $\forall (\Phi R \Psi)\equiv \Psi \land (\Phi \lor \forall \next \forall \Phi R \Psi)$.
-	\subsection*{Exercise 6.21}
+	\section*{Exercise 6.21}
 	\begin{enumerate}[label=(\alph*)]
 		\item $Sat(\Phi_1)=\{s_2, s_3\}$. To compute $Sat(\Psi_1)$ one needs to take only states satisfying $a \land \lnot b = \{s_5\}$ and then take the preceding nodes satisfying $b$, i.e. $Sat(\Psi_1)=\{s_0, s_2\}$.
 		\item To compute $Sat_{sfair}(\exists\always true)$ one takes all the states in the transition system (the ones satisfying $true$), and then compute the SCCs: $SC_1= \{s_0, s_1\}, SC_2 =\{s_2, s_5\}, SC_3 = \{s_3, s_4\}$. Then we check those against $s_{fair}$: 
@@ -1415,7 +1454,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 		\item First we put the formula in \textbf{ENF}: $\Phi\equiv \exists \eventually \exists \always \lnot a$. So we compute first $Sat(\lnot a)=\{s_1, s_2, s_3, s_4\}$ and then remove all but $Sat(\lnot a)$ states and then search for SCCs: $SC_3$ is the only SCC such that all of its states are present in $Sat(\lnot a)$. However, no state in $SC_3$ has fair paths, so $Sat_{sfair}(\exists \forall \lnot a)=\emptyset$.
 		By the same reasoning no state satisfies $\exists \eventually \exists \always \lnot a$ so we conclude $Sat_{sfair}(\Phi)=\emptyset$.
 	\end{enumerate}
-	\subsection*{Exercise 6.22}
+	\section*{Exercise 6.22}
 	\begin{enumerate}[label=(\alph*)]
 		\item This is false: the right part is strictly stronger as it requires all paths exiting the start node to be fair. Assume the unconditional fair assumption $\always \exists yellow$.
 		A counter-example is shown in \autoref{fig:ex6.22:a} where the given transition systems satisfies that for any fair path \textit{green U yellow } but it does not satisfy, for the path $q_0, (q_2)^\omega$ the path formula \textit{green U (yellow $\land a_{fair}$)}.
@@ -1465,7 +1504,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			\end{itemize}
 		\end{itemize}
 	\end{enumerate}
-	\subsection*{Exercise 6.23}
+	\section*{Exercise 6.23}
 	\begin{itemize}
 		\item $Sat_{sfair}(\exists \always \verb|true|)$: first we rewrite the fairness assumptions by replacing sub-formulas with appropriate atomic propositions:
 		\begin{itemize}
@@ -1508,7 +1547,7 @@ Consider two generic non-blocking DBAs $A_1 = (Q, \Sigma, \delta, Q_0, F), A_2 =
 			 We then search for $ Sat(S \setminus \{s_2, s_4, s_5, s_6\} \lor (S \setminus \{s_1, s_2\}))=S \setminus \{s_2\}$. So $\exists \next (S \setminus \{s_2\})=S$.
 		\end{enumerate}
 	\end{itemize}
-	\subsection*{Exercise 6.26}
+	\section*{Exercise 6.26}
 	\begin{enumerate}[label=(\alph*)]
 		\item They are equivalent. $s \models \forall \next \forall \always \Phi \iff \forall \pi \in Paths(s). \pi^1 \models \forall \always \Phi$. But any path, $\rho \in Paths(\pi^1_1)$, is the suffix of a path that starts from $s$, i.e. $s\cdot \rho$, so this is equivalent to $\forall \pi \in Paths(s). \pi^1 \models \always \Phi$ which is exactly the semantics of $\forall \next \always \Phi$.
 		\item They are equivalent by same reasoning of (a)
